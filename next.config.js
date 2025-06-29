@@ -1,15 +1,17 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
+const withPWA = require("next-pwa");
+// const withPWA = (a) => a;
 
-module.exports = {
+module.exports = withPWA({
   reactStrictMode: true,
 
-  async rewrites() {
-    return [
-      {
-        source: "/icon/:sprites/:seed.svg",
-        destination: "https://avatars.dicebear.com/api/:sprites/:seed.svg",
-      },
-    ];
+  pwa: {
+    dest: "public",
+    sw: "service-worker.js",
+    disable: process.env.NODE_ENV === "development",
+    // register: true,
+    // scope: '/app',
+    //...
   },
 
   /**
@@ -48,4 +50,4 @@ module.exports = {
 
     return config;
   },
-};
+});

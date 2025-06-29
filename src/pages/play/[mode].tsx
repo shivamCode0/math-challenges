@@ -14,7 +14,6 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { usePrintMode } from "../../contexts/PrintModeContext";
 import Link from "next/link";
 import Head from "next/head";
-import "katex/dist/katex.min.css";
 import { Base64 } from "util/base64";
 import { shuffle } from "../../util/methods";
 
@@ -155,6 +154,7 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
 
   useEffect(() => {
     window["Base64"] = Base64;
+    // import("scss/katex.scss");
 
     if (!gamemode && game?.gamemode) setGamemode(game.gamemode);
   }, []);
@@ -173,6 +173,12 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
     <>
       <Head>
         <title>{`${game?.name.replace(/<sup>(.*)<\/sup>/g, `^$1`)} | Math Challenges`}</title>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css"
+          integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET"
+          crossOrigin="anonymous"
+        />
       </Head>
       <div className="container">
         {(showPrintModal || printMode) &&

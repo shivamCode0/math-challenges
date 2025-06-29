@@ -6,6 +6,13 @@ import { PrintModeProvider } from "./../contexts/PrintModeContext";
 import { SearchQueryProvider } from "./../contexts/SearchQueryContext";
 import Layout from "./../components/Layout";
 import Head from "next/head";
+import Router from "next/router";
+import NProgress from "nprogress";
+import "./../scss/nprogress.scss";
+
+Router.events.on("routeChangeStart", () => NProgress.start());
+Router.events.on("routeChangeComplete", () => NProgress.done());
+Router.events.on("routeChangeError", () => NProgress.done());
 
 function App({ Component, pageProps }) {
   return (

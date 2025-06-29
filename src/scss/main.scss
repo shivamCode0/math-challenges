@@ -4,10 +4,11 @@
 
 // good themes: zephyr, flatly, united, yeti
 // @import "~bootswatch/dist/zephyr/variables";
+// /*! purgecss start ignore */
 
-
+@import "./nprogress.scss";
+// /*! purgecss end ignore */
 @import "theme/zephyr";
-
 @import "bootstrap";
 @import "theme/bootswatch";
 // @import "~bootswatch/dist/zephyr/bootswatch";
