@@ -1,34 +1,19 @@
+import million from "million/compiler";
+// const million = require("million/compiler");
+
 /**
  * @type {import('next').NextConfig}
  **/
 let nextConfig = {
   reactStrictMode: true,
-  swcMinify: false,
+  swcMinify: true,
 
   experimental: {
     appDir: true,
   },
 
   async rewrites() {
-    return [
-      {
-        source: "/sitemap.txt",
-        destination: "/api/sitemap.txt",
-      },
-      {
-        source: "/test",
-        destination: "https://shivam.pro/",
-      },
-    ];
-  },
-  async redirects() {
-    return [
-      {
-        source: "/amc",
-        destination: "https://mtrainer.ga",
-        permanent: true,
-      },
-    ];
+    return [{ source: "/sitemap.txt", destination: "/api/sitemap.txt" }];
   },
 
   /**
@@ -70,4 +55,6 @@ let nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+export default million.next(nextConfig);
+// export default nextConfig;
+// module.exports = million.next(nextConfig);

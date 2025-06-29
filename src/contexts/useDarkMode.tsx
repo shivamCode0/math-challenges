@@ -34,7 +34,7 @@ function useProvideDarkMode(): { d: DarkModeContextType; s: any } {
   const [DR, setDR] = useState<string>(null);
 
   const DRimp = async () => {
-    const darkcss = await import("scss/darkreader-export-minified", {}).then(({ default: v }) => {
+    const darkcss = await import("scss/darkreader-export-minified").then(({ default: v }) => {
       console.log("Imported DarkReader");
       return v;
     });

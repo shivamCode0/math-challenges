@@ -5,6 +5,7 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import Head from "next/head";
 import { useDarkMode } from "contexts/useDarkMode";
+import { block } from "million/react";
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => ({
   paths: categories.map((c) => ({ params: { category: c.id } })),
@@ -22,7 +23,7 @@ export const getStaticProps: GetStaticProps = async function (ctx) {
   return { props: { category } };
 };
 
-function Home({ category }: { category: typeof categories[0] }) {
+const CategoryPage = function CategoryPage({ category }: { category: (typeof categories)[0] }) {
   const dm = useDarkMode();
 
   let cViewGen = (
@@ -88,6 +89,8 @@ function Home({ category }: { category: typeof categories[0] }) {
       </div>
     </div>
   );
-}
+};
 
-export default Home;
+const CategoryPageBlock = block(CategoryPage as any);
+// export default CategoryPageBlock;
+export default CategoryPage;
