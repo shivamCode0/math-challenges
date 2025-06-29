@@ -12,12 +12,14 @@ function Nav({ searchQuery, setSearchQuery }) {
     <Navbar bg="primary" expand="lg" variant="dark">
       <div className="container-md">
         <div>
-          <a href="/" style={{ textDecoration: "none" }}>
-            <img src={logo.src} alt="" style={{ height: "2rem" }} className="me-2" />
-            <span className="navbar-brand me-0 me-sm-3" style={{ verticalAlign: "middle" }}>
-              Math Challenges
-            </span>
-          </a>
+          <Link href="/">
+            <a style={{ textDecoration: "none" }}>
+              <img src={logo.src} alt="" style={{ height: "2rem" }} className="me-2" />
+              <span className="navbar-brand me-0 me-sm-3" style={{ verticalAlign: "middle" }}>
+                Math Challenges
+              </span>
+            </a>
+          </Link>
           {/* <a href="/">
             <img src={logo} alt="" style={{ height: "2rem" }} className="me-2" />
           </a>

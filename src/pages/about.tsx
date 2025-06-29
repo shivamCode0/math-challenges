@@ -21,7 +21,6 @@ function About() {
       </p>
 
       <h2>Info</h2>
-      <p>Version {process.env.REACT_APP_VERSION}</p>
       <p>
         This website was made by{" "}
         <a href="https://shivam.pro" target="_blank" rel="noopener noreferrer">

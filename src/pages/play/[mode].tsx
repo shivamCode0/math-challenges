@@ -125,9 +125,9 @@ function Play({ mode }: { mode: string }) {
                       <div className="container-md">
                         <div className="text-center w-100">
                           <img src={logo.src} alt="" style={{ height: "2rem" }} className="me-2" />
-                          <a href="/" className="navbar-brand me-0 me-sm-3" style={{ verticalAlign: "middle" }}>
+                          <span className="navbar-brand me-0 me-sm-3" style={{ verticalAlign: "middle" }}>
                             {game.name} - Math Challenges
-                          </a>
+                          </span>
                         </div>
                       </div>
                     </nav>
@@ -251,13 +251,13 @@ function Play({ mode }: { mode: string }) {
         ) : (
           "error"
         )}
-        {ansCorrectHistory.length > 0 && !(!gameEnded && !gameStarted) && (
+        {ansCorrectHistory.length > 0 && (gameEnded || gameStarted) && (
           <div className="mt-5">
             <h3 className="text-center">Your Answers</h3>
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
               {ansCorrectHistory.map((v, i) => (
                 <div className="mx-2" style={{ width: "3rem", border: "none" }} key={i}>
-                  <img src={[xIcon, checkIcon][v]} className="card-img-top" alt="" style={{ height: "3rem" }}></img>
+                  <img src={[xIcon, checkIcon][v].src} className="card-img-top" alt="" style={{ height: "3rem" }} />
                   {/* <div style={{ justifyContent: "center", alignItems: "center", textAlign: "center" }}>
                   <i className={`card-img-top fas fa-3x ${["fa-xmark text-danger", "fa-check text-success"][v]}`} style={{ height: "3rem" }} />
                 </div> */}
