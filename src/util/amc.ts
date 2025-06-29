@@ -11,7 +11,7 @@ const problems = problems1.map((v) => v.trim());
 
 let $: any = jQuery(new JSDOM("<html></html>", {}).window);
 
-export { makeBatch, randomProblems, randomAMC };
+export { makeBatch, randomProblems, randomAMC, randomQ };
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -60,14 +60,16 @@ function getRandom(arr, n) {
 const randomProblems = (n: number) => {
   return makeBatch(getRandom(problems, n));
 };
-
-const randomAMC = (n: number) => {
+const randomQ = (n: number, q: string) => {
   return makeBatch(
     getRandom(
-      problems.filter((v) => v.includes("AMC ")),
+      problems.filter((v) => v.includes(q)),
       n
     )
   );
+};
+const randomAMC = (n: number) => {
+  return randomQ(n, "AMC ");
 };
 
 async function makeBatch(pagenames: string[]): Promise<AMCProblem[]> {

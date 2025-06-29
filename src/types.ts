@@ -20,4 +20,5 @@ export type AMCProblem = {
   difficulty: number;
   problem: string;
   solutions: string;
+  answer?: string;
 };

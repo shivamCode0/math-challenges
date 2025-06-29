@@ -6,6 +6,8 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
+          {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+          {/* <script src="/test-ignore-error.js" /> */}
           {/* <link rel="stylesheet" href="https://cdn.shivam.pro/app-libs/fontawesome-pro-6.0.0-alpha3-web/css/all.min.css" /> */}
 
           {/* Fonts */}

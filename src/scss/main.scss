@@ -138,8 +138,10 @@ img.emoji {
   transition: background-color 200ms ease-in-out;
 }
 
-.dark-image {
-  filter: invert(1) hue-rotate(180deg) saturate(1.4) brightness(0.8) !important;
+.dark-on {
+  .dark-image {
+    filter: invert(1) hue-rotate(180deg) saturate(1.4) brightness(0.8) !important;
+  }
 }
 
 body {
@@ -189,5 +191,10 @@ img.latexcenter {
 .solutions {
   h3.solution-header {
     text-align: center;
+  }
+}
+.category-item-2 {
+  @media screen and (max-width: 650px) {
+    border-right: 6px solid;
   }
 }

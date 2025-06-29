@@ -5,6 +5,7 @@ import { formatLatex, titleCleanup } from "util/amc-helper";
 
 function CompProblem({ v }: { v: AMCProblem }) {
   const [showSolution, setShowSolution] = useState(false);
+  const [ansTextInp, setAnsTextInp] = useState("");
 
   function fixHTML(html: string) {
     return html
@@ -30,6 +31,25 @@ function CompProblem({ v }: { v: AMCProblem }) {
       </div>
       <div className="card-body">
         <div dangerouslySetInnerHTML={{ __html: fixHTML(v.problem) }} />
+        {v.answer && (
+          <div className="input-group">
+            <input className="form-control" placeholder="Answer" type="text" value={ansTextInp} onChange={(e) => setAnsTextInp(e.target.value)} />
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                let inpAns = ansTextInp.trim().toUpperCase();
+                let realAns = v.answer.trim().toUpperCase();
+                if ("ABCDE".split("").includes(realAns) && !"ABCDE".split("").includes(inpAns)) return void alert("Answer must be either A, B, C, D, or E");
+                if (inpAns === realAns) alert("Correct!");
+                else alert("Incorrect!");
+                setAnsTextInp("");
+                // setShowSolution(true);
+              }}
+            >
+              Submit
+            </button>
+          </div>
+        )}
         {showSolution && (
           <>
             <hr />

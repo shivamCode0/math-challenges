@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { makeBatch, randomAMC, randomProblems } from "util/amc";
+import { makeBatch, randomAMC, randomProblems, randomQ } from "util/amc";
 import { AMCProblem } from "types";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<AMCProblem[]>) => {
@@ -10,7 +10,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<AMCProblem[]>) 
   if (Number.isNaN(num)) num = 1;
   if (num > 10) num = 10;
   if (num < 0) num = 1;
-  if (!!q && q.toLowerCase() === "amc") return void res.json(await randomAMC(num));
+  // if (!!q && q.toLowerCase() === "amc") return void res.json(await randomAMC(num));
+  if (!!q) return void res.json(await randomQ(num, q));
   let data = await randomProblems(num);
   res.json(data);
 };

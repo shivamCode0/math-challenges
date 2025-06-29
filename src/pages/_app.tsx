@@ -1,4 +1,5 @@
 import "preact/devtools";
+import "util/error";
 import React from "react";
 import "scss/main.scss";
 import "scss/nprogress.scss";

@@ -2,11 +2,11 @@ import Link from "next/link";
 import Head from "next/head";
 import categories from "../util/categories";
 import banner from "./../img/banner.jpg";
-import Image from "next/image";
-import { useDarkMode } from "contexts/useDarkMode";
+// import Image from "next/image";
+// import { useDarkMode } from "contexts/useDarkMode";
 
 function Home() {
-  const dm = useDarkMode();
+  // const dm = useDarkMode();
 
   return (
     <div>
@@ -47,7 +47,7 @@ function Home() {
               <a className="category-item card-1" style={{ borderColor: v.color }}>
                 {/* <img src={v.img} className="card-img-top" alt="" /> */}
                 <span className={`imgcolor-${v.img}`}>
-                  <img src={`https://cdn.shivam.pro/app-static-data/images/cubes-thumbnail/cubes-blue.png`} alt="" className={`card-img-top trans-filter${dm.darkModeEnabled ? " dark-image" : ""}`} />
+                  <img src={`https://cdn.shivam.pro/app-static-data/images/cubes-thumbnail/cubes-blue.png`} alt="" className={`card-img-top trans-filter dark-image`} />
                 </span>
                 <div className="card-body">
                   <h4 className="card-title">{v.title}</h4>

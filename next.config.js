@@ -6,7 +6,7 @@
  **/
 let nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
+  swcMinify: false,
 
   async rewrites() {
     return [
