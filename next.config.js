@@ -1,11 +1,25 @@
-const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const withPWA = require("next-pwa");
 const runtimeCaching = require("next-pwa/cache");
-// const withPWA = (a) => a;
 
-module.exports = withPWA({
+/**
+ * @type {import('next').NextConfig}
+ **/
+let nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+
+  async rewrites() {
+    return [
+      {
+        source: "/sitemap.txt",
+        destination: "/api/sitemap.txt",
+      },
+      {
+        source: "/test",
+        destination: "https://shivam.pro/",
+      },
+    ];
+  },
 
   pwa: {
     dest: "public",
@@ -52,4 +66,6 @@ module.exports = withPWA({
 
     return config;
   },
-});
+};
+
+module.exports = withPWA(nextConfig);

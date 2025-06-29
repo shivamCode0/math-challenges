@@ -16,6 +16,6 @@
     "baseUrl": "./src",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/util/genSitemap.js", "src/util/genSitemap.js"],
   "exclude": ["node_modules"]
 }
