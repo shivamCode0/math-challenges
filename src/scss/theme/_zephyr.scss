@@ -88,7 +88,7 @@ $font-family-sans-serif: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe 
 $font-size-base: 1rem !default; // Assumes the browser default, typically `16px`
 // $font-size-sm: $font-size-base * 0.875 !default;
 
-$headings-font-family: "Inter", "Lato";
+$headings-font-family: "Inter", "Lato", "Open Sans", "Segoe UI", sans-serif;
 
 // Components
 
