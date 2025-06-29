@@ -14,8 +14,10 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "baseUrl": "./src",
-    "incremental": true
+    "incremental": true,
+    "plugins": [{ "name": "next" }],
+    "strictNullChecks": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/util/genSitemap.js", "src/util/genSitemap.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/util/genSitemap.js", "src/util/genSitemap.js", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]
 }

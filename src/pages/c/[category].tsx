@@ -2,7 +2,7 @@ import twemoji from "twemoji";
 import cView from "util/levels";
 import categories from "util/categories";
 import type { GetStaticPaths, GetStaticProps } from "next";
-import Link from "components/NewNextLink";
+import Link from "next/link";
 import Head from "next/head";
 import { useDarkMode } from "contexts/useDarkMode";
 

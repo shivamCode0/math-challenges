@@ -1,4 +1,4 @@
-import Link from "components/NewNextLink";
+import Link from "next/link";
 import Head from "next/head";
 import categories from "../util/categories";
 import banner from "./../img/banner.jpg";

@@ -7,7 +7,7 @@ import xIcon from "img/x.svg";
 import timeIcon from "img/time.svg";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
-import Link from "components/NewNextLink";
+import Link from "next/link";
 import Modal from "react-bootstrap/Modal";
 import ReactDOM from "react-dom";
 import { Base64 } from "util/base64";
