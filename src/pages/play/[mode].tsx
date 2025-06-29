@@ -110,7 +110,7 @@ function Play({ mode }: { mode: string }) {
 
   return (
     <>
-      <Head>{`${game?.name.replaceAll(/<sup>(.*)<\/sup>/g, `^$1`)} | Math Challenges`}</Head>
+      <Head>{`${game?.name.replace(/<sup>(.*)<\/sup>/g, `^$1`)} | Math Challenges`}</Head>
       <div className="container">
         {(showPrintModal || printMode) &&
           ReactDOM.createPortal(
@@ -124,7 +124,7 @@ function Play({ mode }: { mode: string }) {
                     <nav className="navbar navbar-expand-sm navbar-light">
                       <div className="container-md">
                         <div className="text-center w-100">
-                          <img src={logo} alt="" style={{ height: "2rem" }} className="me-2" />
+                          <img src={logo.src} alt="" style={{ height: "2rem" }} className="me-2" />
                           <a href="/" className="navbar-brand me-0 me-sm-3" style={{ verticalAlign: "middle" }}>
                             {game.name} - Math Challenges
                           </a>

@@ -3,8 +3,11 @@ import Navbar from "react-bootstrap/Navbar";
 import NavbarNav from "react-bootstrap/Nav";
 import logo from "./../img/math-app.png";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 function Nav({ searchQuery, setSearchQuery }) {
+  const { pathname } = useRouter();
+
   return (
     <Navbar bg="primary" expand="lg" variant="dark">
       <div className="container-md">
@@ -30,8 +33,10 @@ function Nav({ searchQuery, setSearchQuery }) {
               Home: "/",
               About: "/about",
             }).map(([k, v]) => (
-              <Link key={k} href={v}>
-                <NavbarNav.Link aria-current="page">{k}</NavbarNav.Link>
+              <Link key={k} href={v} passHref>
+                <NavbarNav.Link active={v == pathname} aria-current="page">
+                  {k}
+                </NavbarNav.Link>
               </Link>
             ))}
           </NavbarNav>

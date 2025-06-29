@@ -12,7 +12,7 @@ function Home() {
       <div className="container col-xxl-8 px-4 py-3 pb-0">
         <div className="row flex-md-row-reverse align-items-center g-3 py-3 pb-0">
           <div className="col-10 col-sm-8 col-md-6">
-            <img src={banner} className="d-block mx-lg-auto img-fluid" alt="" loading="lazy" style={{ height: "12rem", maxHeight: "calc(10vh + 10vw)", objectFit: "cover" }} />
+            <img src={banner.src} className="d-block mx-lg-auto img-fluid" alt="" loading="lazy" style={{ height: "12rem", maxHeight: "calc(10vh + 10vw)", objectFit: "cover" }} />
           </div>
           <div className="col-md-6">
             <h1 className="display-6 lh-1 mb-3" style={{ fontWeight: 600 }}>
