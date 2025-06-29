@@ -906,7 +906,7 @@ const s: { [k: string]: () => Problem } = {
   matrix_mult3: () => matrixMultProblem(6, 4),
 
   test: () => matrixMultProblem(4, 2),
-  test2: () => matrixMultProblem(15, 23),
+  test2: () => matrixMultProblem(15, 14),
 };
 
 export default s;

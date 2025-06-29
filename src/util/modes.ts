@@ -428,7 +428,7 @@ const modesRaw = <(Omit<Mode, "gen" | "amount"> & { amount?: number; id: string 
   },
 ];
 
-// for (let [k, v] of Object.entries(gen)) if (!modesRaw.some((v) => v.id === k)) modesRaw.push({ name: k, id: k, time: 1000 });
+for (let [k, v] of Object.entries(gen)) if (!modesRaw.some((v) => v.id === k)) modesRaw.push({ name: k, id: k, time: 1000 });
 
 const modes: {
   [k: string]: {
@@ -448,14 +448,14 @@ const modes: {
     };
   };
 } = Object.fromEntries(
-  (
-    [
-      ...modesRaw,
-      Object.entries(gen)
-        .filter(([k, v]) => !modesRaw.some((v) => v.id === k))
-        .map(([k, v]) => ({ name: k, id: k, time: 1000 })),
-    ] as typeof modesRaw
-  ).map((v, i) => [v.id, { name: v.name, gen: gen[v.id], time: v.time, amount: v.amount || 10, ...(!!v.meta && { meta: v.meta }) }])
+  modesRaw
+    // [
+    //   ...modesRaw,
+    //   Object.entries(gen)
+    //     .filter(([k]) => !modesRaw.some((v) => v.id === k))
+    //     .map(([k]) => ({ name: k, id: k, time: 1000 })),
+    // ] as typeof modesRaw
+    .map((v, i) => [v.id, { name: v.name, gen: gen[v.id], time: v.time, amount: v.amount || 10, ...(!!v.meta && { meta: v.meta }) }])
 );
 
 export default modes;
