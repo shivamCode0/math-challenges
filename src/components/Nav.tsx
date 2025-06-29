@@ -12,8 +12,8 @@ function Nav({ searchQuery, setSearchQuery }) {
   const dm = useDarkMode();
 
   return (
-    <Navbar bg="primary" expand="sm" variant="dark">
-      <div className="container-md">
+    <Navbar bg="primary" expand="lg" variant="dark">
+      <div className="container-lg">
         <div>
           <Link href="/">
             <a style={{ textDecoration: "none" }}>
