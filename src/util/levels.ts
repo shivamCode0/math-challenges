@@ -156,11 +156,11 @@ const levels: { [k: string]: { name: string; modes: { name: string; mode: string
           { name: "📘 Lvl 2 - Solve Quadratic Equations", mode: "solvequad2" },
           { name: "📚 Lvl 3 - Solve Quadratic Equations", mode: "solvequad3" },
         ],
-        // [
-        //   { name: "🪛 Lvl 1 - Factoring x<sup>2</sup> + bx + c", mode: "factorquad1" },
-        //   { name: "🔧 Lvl 2 - Factoring ax<sup>2</sup> + bx + c", mode: "factorquad2" },
-        //   { name: "⚒ Lvl 3 - Factoring ax<sup>2</sup> + bx + c", mode: "factorquad3" },
-        // ],
+        [
+          { name: "🪛 Lvl 1 - Factoring x<sup>2</sup> + bx + c", mode: "factorquad1" },
+          { name: "🔧 Lvl 2 - Factoring ax<sup>2</sup> + bx + c", mode: "factorquad2" },
+          { name: "⚒ Lvl 3 - Factoring ax<sup>2</sup> + bx + c", mode: "factorquad3" },
+        ],
         [
           { name: "✏ Lvl 1 - General Form to Vertex Form", mode: "vertex_form1" },
           { name: "🖊 Lvl 2 - General Form to Vertex Form", mode: "vertex_form2" },

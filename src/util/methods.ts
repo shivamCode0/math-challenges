@@ -109,14 +109,19 @@ export const gcf = (...arr: number[]): number => {
  * @param equation The equation to simplify the structure
  * @returns Fixed Equation
  */
-export const eqFix = (equation: string): string =>
-  equation
+export const eqFix = (equation: string): string => {
+  let r = equation
     .replace(/\+ -/g, "- ")
+    .replace(/\+-/g, "- ")
+    .replace(/--/g, "- ")
     .replace(/- -/g, "+ ")
     .replace(/= \+/g, "= ")
     .replace(/\b1([a-zA-Z])/g, "$1")
     .replace(/([\s]*[+]+[\s]*)+/g, " + ")
     .replace(/\s+/g, " ");
+  console.log(equation, r);
+  return r;
+};
 
 /**
  * Calculates the least common multiple
@@ -162,6 +167,18 @@ export const prod = (arr: number[]) => arr.reduce((a, c) => a * c, 0);
 export const matrixMult = (A: number[][], B: number[][]) => A.map((row, i) => B[0].map((_, j) => row.reduce((acc, _, n) => acc + A[i][n] * B[n][j], 0)));
 export const matrixToTex = (m: number[][]) => `\\begin{bmatrix} ${m.map((v) => v.join(" & ")).join(" \\\\ ")} \\end{bmatrix}`;
 export const matrixTranspose = (m: number[][]) => m[0].map((_, i) => m.map((x) => x[i]));
+
+export function formatSeconds(totalDSecs: number) {
+  let totalSecs = totalDSecs / 10;
+  let m = Math.floor(totalSecs / 60);
+  let s = totalSecs % 60;
+
+  if (m > 0) return `${m}:${Math.round(s).toString().padStart(2, "0")}`;
+  else
+    return `${s.toLocaleString(undefined, {
+      minimumFractionDigits: 1,
+    })}s`;
+}
 
 /**
  * First 30 Pythagorean Triples

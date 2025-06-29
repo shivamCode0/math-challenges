@@ -1,3 +1,4 @@
+import { Problem } from "types";
 import gen from "./gen";
 
 const modesRaw = <(Omit<Mode, "gen" | "amount"> & { amount?: number; id: string })[]>[
@@ -440,7 +441,7 @@ const modesRaw = <(Omit<Mode, "gen" | "amount"> & { amount?: number; id: string 
   {
     name: "Test",
     id: "test",
-    time: 10000000000,
+    time: 5999,
   },
 ];
 

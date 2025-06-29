@@ -13,7 +13,6 @@ function LevelMaker() {
 
   useEffect(() => {
     import("bootstrap/js/dist/dropdown");
-    window["Base64"] = Base64;
   }, []);
 
   function generateLevel() {

@@ -124,8 +124,6 @@ var Base64 = {
   }, // End Function _utf8_decode
 };
 
-// window["Base64"] = Base64;
-
 const _Base64: {
   encode: (input: string) => string;
   decode: (input: string) => string;

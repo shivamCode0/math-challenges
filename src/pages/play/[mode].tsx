@@ -11,11 +11,13 @@ import Link from "next/link";
 import Modal from "react-bootstrap/Modal";
 import ReactDOM from "react-dom";
 import { Base64 } from "util/base64";
-import { roundDec, shuffle } from "util/methods";
+import { formatSeconds, roundDec, shuffle } from "util/methods";
 import modes from "util/modes";
 import MetaLD from "components/MetaLD";
 import { useLocalStorage } from "usehooks-ts";
 import PrintMode from "components/PrintMode";
+import Scoreboard from "components/Scoreboard";
+import { Problem } from "types";
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => ({
   paths: Object.keys((await import("util/modes")).default).map((m) => ({ params: { mode: m } })),
@@ -63,17 +65,9 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
   const [problem, setProblem] = useState<Problem>(null);
   const [ansCorrectHistory, setAnsCorrectHistory] = useState<number[]>([]);
   const [showAns, setShowAns] = useState(false);
-  const [ans, setAns] = useState("");
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [printAmountQuestions, setPrintAmountQuestions] = useState(10);
   const [gamemode, setGamemode] = useState<"countdown" | "timed">(null);
-  // const [game, setGame] = useState<typeof modes[string] & { gamemode?: "countdown" | "timed" }>(null);
-
-  // useEffect(() => {
-  //   setGame(customMode ? getCustomMode(mode) : modes[mode]);
-  //   // else import("util/modes").then(({ default: modes }) => setModes(modes));
-  // }, [modes]);
-  // let { mode }: { mode: string } = useParams();
 
   const game: typeof modes[string] & { gamemode?: "countdown" | "timed" } = customMode ? getCustomMode(mode) : modes[mode];
 
@@ -112,11 +106,8 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
     setGameEnded(false);
     setGamemode(gm);
 
-    if (gm === "countdown") {
-      setTime(game.time * 10);
-    } else if (gm === "timed") {
-      setTime(0);
-    }
+    if (gm === "countdown") setTime(game.time * 10);
+    else if (gm === "timed") setTime(0);
 
     newProblem();
     setAnsCorrectHistory([]);
@@ -145,17 +136,6 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
     }
   }, [time, gamemode, ansCorrectHistory, gameStarted]);
   //
-  function formatSeconds(totalDSecs: number) {
-    let totalSecs = totalDSecs / 10;
-    let m = Math.floor(totalSecs / 60);
-    let s = totalSecs % 60;
-
-    if (m > 0) return `${m}:${Math.round(s).toString().padStart(2, "0")}`;
-    else
-      return `${s.toLocaleString(undefined, {
-        minimumFractionDigits: 1,
-      })}s`;
-  }
 
   useEffect(() => {
     if (printMode) {
@@ -168,9 +148,6 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
   }, [printMode]);
 
   useEffect(() => {
-    window["Base64"] = Base64;
-    // import("scss/katex.scss");
-
     if (!gamemode && game?.gamemode) setGamemode(game.gamemode);
   }, []);
 
@@ -207,7 +184,7 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
         {gameStarted && !gameEnded ? (
           <div style={{ position: "relative" }}>
             <div>
-              <div className="p-auto mx-auto border-dark" style={{ height: "3rem", width: "6rem", border: "4px solid", textAlign: "center", position: "relative", borderRadius: "8px" }}>
+              <div className="p-auto mx-auto border-dark mb-3" style={{ height: "3rem", width: "6rem", border: "4px solid", textAlign: "center", position: "relative", borderRadius: "8px" }}>
                 <p className="mt-1 mb-0" style={{ textAlign: "center", fontSize: "1.25rem" }}>
                   <img src={timeIcon.src} className="rotate-inf" height={32} width={32} alt="time" />
                   {/* <TimeSymbol /> */}
@@ -220,7 +197,7 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
                 </p>
               )}
             </div>
-            {problem && <ProblemView {...{ problem, selectAns, showAns, newProblem, answerNumber, ans, setAns }} />}
+            <ProblemView {...{ problem, selectAns, showAns, newProblem, answerNumber, setAnsCorrectHistory, setShowAns }} />
           </div>
         ) : !gameStarted && !gameEnded ? (
           <div className="text-center">
@@ -247,77 +224,14 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
                 Play Countdown
               </button>
             )}
-            <button type="button" className="btn btn-primary btn mt-3" onClick={() => setShowPrintModal(true)}>
+            <button type="button" className="btn btn-primary mt-3" onClick={() => setShowPrintModal(true)}>
               Make Worksheet
             </button>
           </div>
         ) : gameEnded ? (
           <>
             <div>
-              {(() => {
-                let c_t = ansCorrectHistory.reduce((a, c) => [a[0] + c, a[1] + 1], [0, 0]);
-                let accuracy = c_t[0] / c_t[1];
-
-                let c = c_t[0];
-                let i = c_t[1] - c_t[0];
-
-                let score: number;
-                switch (gamemode) {
-                  case "countdown":
-                    score = 10 * c - 8 * i;
-                    break;
-                  case "timed":
-                    score = ((100 / (time / 20)) * (c - i / 2)) / (c + i);
-                    break;
-                }
-
-                let results: [string, string][];
-                switch (gamemode) {
-                  case "countdown":
-                    results = [
-                      ["Accuracy", `${Math.round(accuracy * 1e4) / 100}%`],
-                      ["Score", `${Math.round(score)}`],
-                      ["# of Problems", `${c + i}`],
-                    ];
-                    break;
-                  case "timed":
-                    results = [
-                      ["Accuracy", `${Math.round(accuracy * 1e4) / 100}%`],
-                      ["Score", `${Math.round(score)}`],
-                      ["Time", `${formatSeconds(time)}`],
-                    ];
-                    break;
-                }
-
-                return (
-                  <div style={{ display: "flex", justifyContent: "center" }}>
-                    <div className="mt-2 me-3">
-                      <p className="text-center mb-0" style={{ fontSize: "2.5em", fontWeight: 700 }}>
-                        {results[0][1]}
-                      </p>
-                      <p className="text-center" style={{ fontSize: "1em", fontWeight: 700 }}>
-                        {results[0][0]}
-                      </p>
-                    </div>
-                    <div className="mx-4 mx-md-5">
-                      <p className="text-center mb-0" style={{ fontSize: "3.25em", fontWeight: 700, color: score <= 0 ? "red" : undefined }}>
-                        {results[1][1]}
-                      </p>
-                      <p className="text-center" style={{ fontSize: "1.5em", fontWeight: 700 }}>
-                        {results[1][0]}
-                      </p>
-                    </div>
-                    <div className="mt-2 ms-3">
-                      <p className="text-center mb-0" style={{ fontSize: "2.5em", fontWeight: 700 }}>
-                        {results[2][1]}
-                      </p>
-                      <p className="text-center" style={{ fontSize: "1em", fontWeight: 700 }}>
-                        {results[2][0]}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })()}
+              <Scoreboard {...{ game, ansCorrectHistory, gamemode, time }} />
             </div>
             <div className="text-center mt-4" style={{}}>
               <Link href="/">

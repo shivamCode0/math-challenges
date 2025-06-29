@@ -5,10 +5,12 @@ import right_triangle from "./../img/right-triangle.svg";
 import React from "react";
 import GetDesmos from "util/desmos";
 import { renderFunc } from "./renderFunc";
+import { Problem } from "types";
 
 export enum ProblemType {
   MC = "MultipleChoice",
   Text = "Text",
+  Custom = "Custom",
 }
 
 const add = (min: number, max: number): Problem => {
@@ -276,11 +278,16 @@ const graphYInt = (min: number, max: number, maxP): Problem => {
 };
 
 const factorQuad = (diffA: boolean, min: number, max: number, aMin?: number, aMax?: number): Problem => {
-  let x1 = !diffA ? 1 : rand(aMin, aMax, { no0: true });
-  let x2 = !diffA ? 1 : rand(aMin, aMax, { no0: true });
+  let primesAnd1 = [1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131];
+
+  let x1 = diffA ? shuffle(primesAnd1.filter((v) => v >= aMin && v <= aMax))[0] : 1;
+  let x2 = diffA ? shuffle(primesAnd1.filter((v) => v >= aMin && v <= aMax))[0] : 1;
 
   let b1 = rand(min, max, { no0: true });
   let b2 = rand(min, max, { no0: true });
+
+  if (diffA) [x1, x2] = [x1, x2].sort((a, b) => b - a);
+  else [b1, b2] = [b1, b2].sort((a, b) => b - a);
 
   let ans = eqFix(`(${x1}x + ${b1})(${x2}x + ${b2})`);
 
@@ -298,32 +305,51 @@ const factorQuad = (diffA: boolean, min: number, max: number, aMin?: number, aMa
   //   ];
 
   // /* prettier-ignore */ let ia = diffA ? [[[x1, b2], [x2, b1]], [[x1 * x2, b2], [1, b1]]] : [[x1 * x2, b2], [1, b1]];
-  let ia = diffA
-    ? [
-        [
-          [x1, b2],
-          [x2, b1],
-        ],
-        [
-          [x1 * x2, b2],
-          [1, b1],
-        ],
-      ]
-    : [
-        [
-          [x1 * x2, b2],
-          [1, b1],
-        ],
-      ];
+  // let ia = diffA
+  //   ? [
+  //       [
+  //         [x1, b2],
+  //         [x2, b1],
+  //       ],
+  //       [
+  //         [x1 * x2, b2],
+  //         [1, b1],
+  //       ],
+  //     ]
+  //   : [
+  //       [
+  //         [x1 * x2, b2],
+  //         [1, b1],
+  //       ],
+  //     ];
 
   return {
     q: (
       <>
         Factor <Tex tex={expForm} />
+        <br />
+        <small>
+          <em>{diffA ? "Coefficient" : "Answers"} greatest to least</em>
+        </small>
       </>
     ),
     ans,
-    opts: shuffle([{ text: `${ans}`, correct: true }, ...ia.map((v) => ({ text: eqFix(v.map((v2) => `(${v2[0]}x + ${v2[1]})`).join("")), correct: false }))]),
+    opts: shuffle([
+      { text: `${ans}`, correct: true },
+      // ...ia.map((v) => ({
+      //   text: eqFix(v.map((v2) => `(${v2[0]}x + ${v2[1]})`).join("")),
+      //   correct: false,
+      // })),
+    ]),
+    type: ProblemType.Custom,
+    // (`(${x1}x + ${b1})(${x2}x + ${b2})`);
+    ansCustom: (Input) => (
+      <>
+        ({diffA && <Input ans={x1} />}x + <Input ans={b1} />
+        )(
+        {diffA && <Input ans={x2} />}x + <Input ans={b2} />)
+      </>
+    ),
   };
 };
 
@@ -375,21 +401,59 @@ const sysLinear = (min: number = -8, max: number = 8, minC: number = -3, maxC: n
   };
 };
 
-const sysLinear3 = (min: number = -8, max: number = 8, minC: number = -3, maxC: number = 3): Problem => {
-  let x = rand(min, max);
-  let y = rand(min, max);
-  let z = rand(min, max);
+// const sysLinear3 = (min: number = -8, max: number = 8, minC: number = -3, maxC: number = 3): Problem => {
+//   let x = rand(min, max);
+//   let y = rand(min, max);
+//   let z = rand(min, max);
 
-  /* prettier-ignore */ let coeffs = Array(3).fill(null).map(() => Array(3).fill(null).map(() => rand(minC, maxC, { no0: true })))
+//   /* prettier-ignore */ let coeffs = Array(3).fill(null).map(() => Array(3).fill(null).map(() => rand(minC, maxC, { no0: true })))
 
-  let eqs = coeffs.map(([c1, c2, c3]) => eqFix((c1 < 0 && c2 > 0 ? `${c2}y + ${c1}x + ${c3}z` : `${c1}x + ${c2}y + ${c3}z`) + ` = ${c1 * x + c2 * y + c3 * z}`));
+//   let eqs = coeffs.map(([c1, c2, c3]) => eqFix((c1 < 0 && c2 > 0 ? `${c2}y + ${c1}x + ${c3}z` : `${c1}x + ${c2}y + ${c3}z`) + ` = ${c1 * x + c2 * y + c3 * z}`));
 
-  let ans = `(${x}, ${y}, ${z})`;
-  let ia = [`(${x + 2}, ${y}, ${z})`, `(${rs() * (x - y)}, ${y}, ${z})`, `(${rs() * x}, ${y - 2}, ${rs() * z})`, `(${y - 1}, ${x}, ${rs() * z})`];
+//   let ans = `(${x}, ${y}, ${z})`;
+//   let ia = [`(${x + 2}, ${y}, ${z})`, `(${rs() * (x - y)}, ${y}, ${z})`, `(${rs() * x}, ${y - 2}, ${rs() * z})`, `(${y - 1}, ${x}, ${rs() * z})`];
+//   return {
+//     q: (
+//       <>
+//         Solve for (x, y, z) using the following equations.
+//         {eqs.map((v) => (
+//           <React.Fragment key={v}>
+//             <br /> <Tex tex={v} />
+//           </React.Fragment>
+//         ))}
+//       </>
+//     ),
+//     ans,
+//     opts: shuffle([{ text: `${ans}`, correct: true }, ...ia.filter((v) => v !== ans).map((v) => ({ text: v, correct: false }))]),
+//     type: ProblemType.Custom,
+//     ansCustom: (Input) => (
+//       <>
+//         (<Input ans={x} />, <Input ans={y} />, <Input ans={z} />)
+//       </>
+//     ),
+//   };
+// };
+
+const sysLinearN = (n: number, min: number = -8, max: number = 8, minC: number = -3, maxC: number = 3): Problem => {
+  let s = Array(n)
+    .fill(0)
+    .map(() => rand(min, max));
+
+  /* prettier-ignore */ let coeffsMatrix = Array(n).fill(null).map(() => Array(n).fill(null).map(() => rand(minC, maxC, { no0: true })))
+
+  let letters = "abcdefghijklmnopqrstuvwxyz".split("").slice(-n);
+
+  // let eqs = coeffs.map(([c1, c2, c3]) => eqFix((c1 < 0 && c2 > 0 ? `${c2}y + ${c1}x + ${c3}z` : `${c1}x + ${c2}y + ${c3}z`) + ` = ${c1 * x + c2 * y + c3 * z}`));
+  let eqs = coeffsMatrix.map((coeffs) => {
+    return eqFix(`${coeffs.map((v, i) => `${v}${letters[i]}`).join(" + ")} = ${coeffs.map((v, i) => v * s[i]).reduce((a, c) => a + c, 0)}`);
+  });
+  console.log(eqs);
+  let ans = `(${s.join(", ")})`;
+  // let ia = [`(${x + 2}, ${y}, ${z})`, `(${rs() * (x - y)}, ${y}, ${z})`, `(${rs() * x}, ${y - 2}, ${rs() * z})`, `(${y - 1}, ${x}, ${rs() * z})`];
   return {
     q: (
       <>
-        Solve for (x, y, z) using the following equations.
+        Solve for ({letters.join(", ")}) using the following equations.
         {eqs.map((v) => (
           <React.Fragment key={v}>
             <br /> <Tex tex={v} />
@@ -398,25 +462,53 @@ const sysLinear3 = (min: number = -8, max: number = 8, minC: number = -3, maxC: 
       </>
     ),
     ans,
-    opts: shuffle([{ text: `${ans}`, correct: true }, ...ia.filter((v) => v !== ans).map((v) => ({ text: v, correct: false }))]),
+    opts: shuffle([{ text: `${ans}`, correct: true }]),
+    type: ProblemType.Custom,
+    ansCustom: (Input) => (
+      <>
+        (
+        {s.map((v, i) => (
+          <React.Fragment key={i}>
+            <Input ans={v} />
+            {i < s.length - 1 && ", "}
+          </React.Fragment>
+        ))}
+        )
+      </>
+    ),
   };
 };
 
+if (typeof window !== "undefined") window["eqFix"] = eqFix;
 /**
  * Quadratic Equation
  */
 const solve1q = (diffA: boolean, min: number, max: number, mMin?: number, mMax?: number): Problem => {
   let x1 = rand(min, max, { no0: true });
   let x2 = rand(min, max, { no0: true });
+  // x1 = -5;
+  // x2 = -5;
 
   let m1 = !diffA ? 1 : rand(mMin, mMax, { no0: true });
-  let b1 = -x1 * m1;
   let m2 = !diffA ? 1 : rand(mMin, mMax, { no0: true });
-  let b2 = -x2 * m2;
 
-  let ans = (x1 === x2 ? [x1] : [x1, x2]).sort((a, b) => b - a);
+  // (m1*x1 - b1)(m2*x1 - b2) = 0
+  // m1*m*2*x1^2 - b2*m1*x1 - b1*m2*x1 + b1*b2 = 0
+  // m1*m*2*x1^2 - x1(b2*m1 + b1*m2) + b1*b2 = 0
+  // m1*m*2*x2^2 - x2(b2*m1 + b1*m2) + b1*b2 = 0
+  // m1*m*2*x1^2 - x1(b2*m1 + b1*m2) + b1*b2 - m1*m*2*x2^2 + x2(b2*m1 + b1*m2) - b1*b2 = 0
+  // m1*m*2*x1^2 - x1(b2*m1 + b1*m2) - m1*m*2*x2^2 + x2(b2*m1 + b1*m2) = 0
+  // m1*m*2*x1^2 + x2(b2*m1 + b1*m2)- x1(b2*m1 + b1*m2) - m1*m*2*x2^2  = 0
+  // m1*m*2*x1^2 + (x2-x1)(b2*m1 + b1*m2) - m1*m*2*x2^2  = 0
+  // (m1*x2 - b1)(m2*x2 - b2) = 0
 
-  let b = m1 * b2 + m2 * b1;
+  let b1 = m1 * x1;
+  let b2 = m2 * x2;
+
+  let ans = (x1 === x2 ? [x1] : [x1, x2]).sort((a, b) => a - b);
+
+  let b = -(m1 * b2 + m2 * b1);
+  console.log(b1, b2, b);
   let expForm = eqFix(`${m1 * m2}x^2 + ${b}x + ${b1 * b2} = 0`);
   let ia = [
     //
@@ -435,12 +527,18 @@ const solve1q = (diffA: boolean, min: number, max: number, mMin?: number, mMax?:
         <Tex tex={expForm} />
         <br />
         <small>
-          <em>If there are multiple answers, seperate them with a comma.</em>
+          <em>Answers least to greatest</em>
         </small>
       </>
     ),
     ans: ans.join(", "),
     opts: shuffle([{ text: `${ans.join(", ")}`, correct: true }, ...ia.filter((v) => JSON.stringify(v) !== JSON.stringify(ans)).map((v) => ({ text: v.join(", "), correct: false }))]),
+    type: ProblemType.Custom,
+    ansCustom: (Input) => (
+      <>
+        <Input ans={ans[0]} />, <Input ans={ans[1] || ans[0]} isCorrect={(v) => (ans[1] ? v === ans[1] : v === ans[0] || !v)} />
+      </>
+    ),
   };
 };
 
@@ -878,6 +976,26 @@ const identifyFunction = async (n: number): Promise<Problem> => {
   };
 };
 
+const testMultipleAns = (n: number): Problem => {
+  return {
+    q: <>Choose 1 and 2</>,
+    ans: "1, 2",
+    opts: [
+      {
+        text: "13",
+        correct: false,
+      },
+    ],
+    type: ProblemType.Custom,
+    ansCustom: (Input) => (
+      <>
+        1st: <Input ans={1} />
+        2nd: <Input ans={2} />
+      </>
+    ),
+  };
+};
+
 /**
  * Algebraic Simplification
  */
@@ -993,9 +1111,9 @@ const s: { [k: string]: () => Problem | Promise<Problem> } = {
   syslinear2: () => sysLinear(-6, 6, -6, 6),
   syslinear3: () => sysLinear(-12, 12, -12, 12),
 
-  syslinear3_1: () => sysLinear3(1, 6, -4, 4),
-  syslinear3_2: () => sysLinear3(-6, 6, -6, 6),
-  syslinear3_3: () => sysLinear3(-12, 12, -12, 12),
+  syslinear3_1: () => sysLinearN(3, 1, 6, -4, 4),
+  syslinear3_2: () => sysLinearN(3, -6, 6, -6, 6),
+  syslinear3_3: () => sysLinearN(3, -12, 12, -12, 12),
 
   pythagorean_theorem1: () => pythagoreanTheorem(false, 3, 8),
   pythagorean_theorem2: () => pythagoreanTheorem(true, 3, 12),
@@ -1049,7 +1167,7 @@ const s: { [k: string]: () => Problem | Promise<Problem> } = {
   identify_function2: () => identifyFunction(2),
   identify_function3: () => identifyFunction(3),
 
-  test: () => testDesmos(),
+  test: () => sysLinearN(2, -6, 12, -8, 16),
   test2: () => matrixMultProblem(15, 14),
 };
 
