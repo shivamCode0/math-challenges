@@ -1,0 +1,19 @@
+{
+  "name": "Math Challenges",
+  "short_name": "Math Challenges",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png?v=PYAlRGqNaP",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png?v=PYAlRGqNaP",
+      "sizes": "512x512",
+      "typez": "image/png"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}

@@ -1,0 +1,104 @@
+// $font-size-base: 1.125rem;
+// $c: 248;
+// $body-bg: rgb($c, $c, $c);
+
+// good themes: zephyr, flatly, united, yeti
+// @import "~bootswatch/dist/zephyr/variables";
+
+@import "theme/zephyr";
+@import "bootstrap";
+@import "theme/bootswatch";
+// @import "~bootswatch/dist/zephyr/bootswatch";
+
+// @import "flatly/bootswatch.scss";
+.print-only {
+  @media screen {
+    display: none;
+  }
+}
+// * {
+//   break-inside: avoid;
+//   page-break-inside: avoid;
+// }
+@media print {
+  .no-print {
+    display: none;
+  }
+}
+.card-1 {
+  border: none;
+  box-shadow: 0 0 6px #00000020;
+}
+
+.app {
+  min-height: 100vh;
+  position: relative;
+}
+
+p {
+  font-size: 1.125em;
+}
+
+.modal-dialog {
+  min-width: max-content;
+}
+
+img.emoji {
+  height: 1em;
+  width: 1em;
+  margin: 0 0.05em 0 0.1em;
+  vertical-align: -0.1em;
+}
+
+.pdiv1 {
+  @extend .mx-auto;
+  width: max-content;
+  text-align: right;
+  margin-top: 1rem;
+}
+
+.category-item {
+  @extend .card;
+  @extend .m-2;
+  max-width: 18rem;
+  min-width: 16rem;
+  flex: 1;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 6px solid;
+
+  img {
+    height: 12rem;
+    object-fit: cover;
+  }
+  @media screen and (max-width: 650px) {
+    min-width: 100%;
+    max-width: 100%;
+    flex-direction: row;
+    border-left: 6px solid;
+    border-bottom: none;
+    img {
+      order: 1;
+      height: 100%;
+      width: 12rem;
+
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-top-right-radius: calc(0.25rem - 1px);
+      border-bottom-right-radius: calc(0.25rem - 1px);
+    }
+  }
+
+  @media screen and (max-width: 470px) {
+    min-width: 100%;
+    max-width: 100%;
+    flex-direction: row;
+    img {
+      display: none;
+    }
+  }
+}
+
+.level-group {
+  min-width: 18rem;
+}
