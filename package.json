@@ -40,8 +40,7 @@
     "start": "next start",
     "lint": "next lint",
     "gitremovejunkfiles": "git clean -Xdf",
-    "format": "prettier . --write --ignore-path ./.gitignore",
-    "postbuild": "next-sitemap"
+    "format": "prettier . --write --ignore-path ./.gitignore"
   },
   "prettier": {
     "printWidth": 200,
