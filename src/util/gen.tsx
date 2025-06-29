@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { rand, shuffle, rs, eqFix, isPrime, lcm, gcf, pyTriples30, pyQuadruples30, zip, divByGCF, matrixMult, matrixToTex, matrixTranspose } from "./methods";
-import Tex from "../components/Tex";
-import right_triangle from "./../img/right-triangle.svg";
+import Tex from "components/Tex";
+import right_triangle from "img/right-triangle.svg";
 import React from "react";
-import { renderFunc } from "./renderFunc";
+import { evalLatex, renderFunc } from "./renderFunc";
 import { Problem } from "types";
 
 export enum ProblemType {
@@ -330,10 +330,11 @@ const linEq1 = (min = -6, max = 6, uc2 = true): Problem => {
     ),
     ans: ans,
     opts: shuffle([{ text: `${ans}`, correct: true }, ...ia.filter((v) => v !== `${ans}`).map((v) => ({ text: eqFix(v), correct: false }))]),
+    type: ProblemType.Text,
   };
 };
 
-const sysLinear = (min: number = -8, max: number = 8, minC: number = -3, maxC: number = 3): Problem => {
+const sysLinear2 = (min: number = -8, max: number = 8, minC: number = -3, maxC: number = 3): Problem => {
   let x = rand(min, max);
   let y = rand(min, max);
   let e1c1 = rand(minC, maxC, { no0: true });
@@ -341,7 +342,7 @@ const sysLinear = (min: number = -8, max: number = 8, minC: number = -3, maxC: n
   let e2c1 = rand(minC, maxC, { no0: true });
   let e2c2 = rand(minC, maxC, { no0: true });
 
-  if ((e1c1 === e2c1 && e1c2 === e2c2) || e1c1 / e2c1 === e1c2 / e2c2) return sysLinear(min, max, minC, maxC);
+  if ((e1c1 === e2c1 && e1c2 === e2c2) || e1c1 / e2c1 === e1c2 / e2c2) return sysLinear2(min, max, minC, maxC);
 
   let ans = `(${x}, ${y})`;
 
@@ -358,6 +359,12 @@ const sysLinear = (min: number = -8, max: number = 8, minC: number = -3, maxC: n
     ),
     ans,
     opts: shuffle([{ text: `${ans}`, correct: true }, ...ia.filter((v) => v !== ans).map((v) => ({ text: v, correct: false }))]),
+    type: ProblemType.Custom,
+    ansCustom: (Input) => (
+      <>
+        ({<Input ans={x} />}, {<Input ans={y} />})
+      </>
+    ),
   };
 };
 
@@ -846,6 +853,42 @@ const testDesmos = async (): Promise<Problem> => {
   };
 };
 
+const determineFunctionLinearGraph = async (maxM = 5, maxB = maxM): Promise<Problem> => {
+  let m = rand(-maxM, maxM);
+  let b = rand(-maxB, maxB);
+  let ans = `y = ${m}x + ${b}`;
+  // let opts = ["y = x^2", "y = x", "x^2 + y^2 = 1", "y = e^x"];
+
+  let svg = await renderFunc(ans, false);
+
+  return {
+    q: (
+      <>
+        Complete the equation to match the graph shown.
+        <br />
+        <img style={{ height: "20rem" }} src={`data:image/svg+xml;charset=utf-8;base64,${btoa(svg)}`} alt="graph" />
+      </>
+    ),
+    ans,
+    opts: [],
+    type: ProblemType.Custom,
+    ansCustom: (Input) => (
+      <>
+        <Tex tex="y = ~" />
+        <Input ans={m} />
+        {b === 0 ? (
+          <Tex tex="~x" />
+        ) : (
+          <>
+            <Tex tex="~x~+~" />
+            <Input ans={b} />
+          </>
+        )}
+      </>
+    ),
+  };
+};
+
 const identifyFunction = async (n: number): Promise<Problem> => {
   let a: string[][] = [
     ["y = x^2", "y = x", "x^2 + y^2 = 1", "y = e^x"],
@@ -1013,9 +1056,9 @@ const s: { [k: string]: () => Problem | Promise<Problem> } = {
   lineq2: () => linEq1(-12, 12, true),
   lineq3: () => linEq1(-24, 24, true),
 
-  syslinear1: () => sysLinear(1, 6, -4, 4),
-  syslinear2: () => sysLinear(-6, 6, -6, 6),
-  syslinear3: () => sysLinear(-12, 12, -12, 12),
+  syslinear1: () => sysLinear2(1, 6, -4, 4),
+  syslinear2: () => sysLinear2(-6, 6, -6, 6),
+  syslinear3: () => sysLinear2(-12, 12, -12, 12),
 
   syslinear3_1: () => sysLinearN(3, 1, 6, -4, 4),
   syslinear3_2: () => sysLinearN(3, -6, 6, -6, 6),
@@ -1073,7 +1116,11 @@ const s: { [k: string]: () => Problem | Promise<Problem> } = {
   identify_function2: () => identifyFunction(2),
   identify_function3: () => identifyFunction(3),
 
-  test: () => sysLinearN(2, -6, 12, -8, 16),
+  determine_line1: () => determineFunctionLinearGraph(3, 0),
+  determine_line2: () => determineFunctionLinearGraph(3, 2),
+  determine_line3: () => determineFunctionLinearGraph(5, 5),
+
+  test: () => determineFunctionLinearGraph(),
   test2: () => matrixMultProblem(15, 14),
 };
 

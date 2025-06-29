@@ -14,7 +14,7 @@ import { Base64 } from "util/base64";
 import { formatSeconds, roundDec, shuffle } from "util/methods";
 import modes from "util/modes";
 import MetaLD from "components/MetaLD";
-import { useLocalStorage } from "usehooks-ts";
+// import { useLocalStorage } from "usehooks-ts";
 import PrintMode from "components/PrintMode";
 import Scoreboard from "components/Scoreboard";
 import { Problem } from "types";
@@ -70,7 +70,7 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
   const game: typeof modes[string] & { gamemode?: "countdown" | "timed" } = customMode ? getCustomMode(mode) : modes[mode];
 
   const { printMode, setPrintMode } = usePrintMode();
-  const [dataLS, setDataLS] = useLocalStorage("mathchallenges_levels", {});
+  // const [dataLS, setDataLS] = useLocalStorage("mathchallenges_levels", {});
 
   function newProblem() {
     (async () => game.gen())().then((p) => setProblem(p));

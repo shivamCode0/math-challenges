@@ -439,6 +439,21 @@ const modesRaw = <(Omit<Mode, "gen" | "amount"> & { amount?: number; id: string 
     time: 120,
   },
   {
+    name: "Level 1 - Determine the Equation of a Line",
+    id: "determine_line1",
+    time: 120,
+  },
+  {
+    name: "Level 2 - Determine the Equation of a Line",
+    id: "determine_line2",
+    time: 120,
+  },
+  {
+    name: "Level 3 - Determine the Equation of a Line",
+    id: "determine_line3",
+    time: 120,
+  },
+  {
     name: "Test",
     id: "test",
     time: 5999,

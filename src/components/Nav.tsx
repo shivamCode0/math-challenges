@@ -4,9 +4,12 @@ import NavbarNav from "react-bootstrap/Nav";
 import logo from "./../img/math-app.png";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useDarkMode } from "contexts/useDarkMode";
 
 function Nav({ searchQuery, setSearchQuery }) {
   const { pathname } = useRouter();
+
+  const dm = useDarkMode();
 
   return (
     <Navbar bg="primary" expand="sm" variant="dark">
@@ -34,6 +37,7 @@ function Nav({ searchQuery, setSearchQuery }) {
             {Object.entries({
               Home: "/",
               About: "/about",
+              Levelmaker: "/levelmaker",
             }).map(([k, v]) => (
               <Link key={k} href={v} passHref>
                 <NavbarNav.Link active={v == pathname} aria-current="page">
@@ -42,6 +46,12 @@ function Nav({ searchQuery, setSearchQuery }) {
               </Link>
             ))}
           </NavbarNav>
+          <div className="form-check form-switch text-danger" style={{ width: "max-content", margin: "auto" }}>
+            <label className="form-check-label" htmlFor="darkModeSwitch" style={{ color: "var(--bs-light)" }}>
+              Dark Mode<span className="badge bg-secondary ms-2">Beta</span>
+            </label>
+            <input className="form-check-input" type="checkbox" id="darkModeSwitch" checked={dm.darkModeEnabled} onChange={() => dm.toggleDarkMode()} />
+          </div>
           <div className="d-flex">
             <div className="input-group">
               <input

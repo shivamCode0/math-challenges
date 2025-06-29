@@ -74,7 +74,7 @@ const ProblemView = ({
         };
       }, [input, id]);
 
-      return <input className="form-control" style={{ width: "max-content", maxWidth: "6rem", display: "inline" }} type="text" value={input} onChange={(e) => setInput(e.target.value)} />;
+      return <input className="form-control p-1" style={{ width: "max-content", maxWidth: "4rem", display: "inline" }} type="text" value={input} onChange={(e) => setInput(e.target.value)} />;
     };
 
   return useMemo(
