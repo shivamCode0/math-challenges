@@ -160,7 +160,7 @@ function Play({ mode }: { mode: string }) {
                           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
                             {v.type === ProblemType.Text ? (
                               <div className="input-group">
-                                <input className="ml-2 form-control" type="text" style={{ width: "16px" }} />
+                                <input className="ms-2 form-control" type="text" style={{ width: "16px" }} />
                               </div>
                             ) : (
                               <p className="text-center mb-0">

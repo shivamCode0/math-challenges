@@ -51,7 +51,7 @@ const ProblemView = ({ problem, selectAns, showAns, newProblem, answerNumber }: 
           ) : problem.type === ProblemType.Text ? (
             <div className="input-group" style={{ maxWidth: "25rem" }}>
               <input
-                className="ml-2 form-control"
+                className="ms-2 form-control"
                 type="text"
                 onKeyUp={(e) => void (e.key === "Enter" && answerText())}
                 value={ansText}
