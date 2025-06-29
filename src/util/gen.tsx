@@ -191,16 +191,16 @@ const mult = (min: number, max: number): Problem => {
   };
 };
 
-const div = (min: number, max: number): Problem => {
+const div = (min: number, max: number, maxC = max): Problem => {
   let a = rand(min, max, { no0: true });
-  let b = rand(min, max, { no0: true });
+  let b = a * rand(min, maxC, { no0: true });
   return {
     q: (
       <>
         Evaluate the following expression:
         <br />
         <div className="pdiv1">
-          <Tex tex={`${a}\\\\\\div\\space${b}`} />
+          <Tex tex={`${b}\\\\\\div\\space${a}`} />
           <br />
 
           {/* <br /> */}
@@ -208,10 +208,10 @@ const div = (min: number, max: number): Problem => {
         </div>
       </>
     ),
-    ans: a,
+    ans: b / a,
     opts: shuffle([
-      { text: `${a}`, correct: true },
-      { text: `${a - b}`, correct: false },
+      { text: `${b / a}`, correct: true },
+      { text: `${b / a - a}`, correct: false },
       { text: `${Math.round((a * b * b) / 10)}`, correct: false },
       { text: `${Math.floor(b / 2) - 1 === a ? Math.floor(b / 2) : Math.floor(b / 2) - 1}`, correct: false },
     ]),

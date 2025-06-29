@@ -366,7 +366,7 @@ const modes: {
       id: "test",
       time: 10000000000,
     },
-  ].map((v) => [v.id, { name: v.name, gen: gen[v.id], time: v.time, amount: v.amount || 10 }])
+  ].map((v, i) => [v.id, { name: v.name, gen: gen[v.id], time: v.time, amount: v.amount || 10 }])
 );
 
 export default modes;

@@ -25,6 +25,7 @@ module.exports = {
 
     if (process.env.ANALYZE) {
       const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+      const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
       config.plugins.push(
         new BundleAnalyzerPlugin({
           analyzerMode: "static",
@@ -32,6 +33,7 @@ module.exports = {
           openAnalyzer: true,
         })
       );
+      config.plugins.push(new DuplicatePackageCheckerPlugin());
     }
     return config;
   },

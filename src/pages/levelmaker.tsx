@@ -8,6 +8,7 @@ function LevelMaker() {
   const [timeSeconds, setTimeSeconds] = useState(30);
   const [levels, setLevels] = useState<{ [k: string]: string }>({});
   const [levelSearchText, setLevelSearchText] = useState("");
+  const [levelName, setLevelName] = useState("");
 
   useEffect(() => {
     import("bootstrap/js/dist/dropdown");
@@ -16,15 +17,17 @@ function LevelMaker() {
 
   function generateLevel() {
     if (Object.keys(levels).length === 0) return void alert("No levels selected");
+    if (!levelName) return void alert("Level name is required");
+
     let data = {
+      n: levelName,
       gm: gamemode,
       qc: numOfQ,
       ts: timeSeconds,
-      l: Object.keys(levels).map((v) => v),
+      l: Object.keys(levels).sort((a, b) => a.localeCompare(b)),
     };
-    console.log(data);
+
     let customModeId = Base64.encode(JSON.stringify(data));
-    console.log(JSON.stringify(data));
     window.location.href = `/play/custom/${customModeId}`;
   }
 
@@ -32,6 +35,15 @@ function LevelMaker() {
     <div className="container mt-3">
       <h1 className="text-center">Level Maker</h1>
       <hr />
+      <p>Make your own compound level that has questions from existing levels. Pick and choose the settings you want, and send your custom level to anyone.</p>
+
+      <div className="mb-3">
+        <label className="me-2" htmlFor="levelname">
+          Custom Level Name
+        </label>
+        <input type="text" className="form-control w-auto d-inline" id="levelname" value={levelName} onChange={(e) => setLevelName(e.target.value)} />
+      </div>
+
       <div className="mb-3">
         <label className="me-2" htmlFor="gamemode">
           Gamemode

@@ -14,7 +14,7 @@ function Nav({ searchQuery, setSearchQuery }) {
         <div>
           <Link href="/">
             <a style={{ textDecoration: "none" }}>
-              <img src={logo.src} alt="" style={{ height: "2rem" }} className="me-2" />
+              <img src={logo.src} alt="Logo" style={{ height: "2rem" }} className="me-2" width={32} height={32} />
               <span className="navbar-brand me-0 me-sm-3" style={{ verticalAlign: "middle" }}>
                 Math Challenges
               </span>

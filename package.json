@@ -9,6 +9,7 @@
     "@types/react-dom": "^17.0.9",
     "@types/twemoji": "^12.1.2",
     "bootstrap": "^5.1.1",
+    "duplicate-package-checker-webpack-plugin": "^3.0.0",
     "katex": "^0.13.18",
     "nanoid": "^3.1.25",
     "next": "^11.1.2",

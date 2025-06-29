@@ -26,7 +26,6 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => ({
 export const getStaticProps: GetStaticProps = async function (ctx) {
   const modeId: string = ctx.params?.mode as any;
   const customModeId: string = ctx.params?.custommode as any;
-  console.log({ customModeId });
 
   if (customModeId) return { props: { mode: customModeId, customMode: true } };
   else {
@@ -38,16 +37,22 @@ export const getStaticProps: GetStaticProps = async function (ctx) {
   }
 };
 
-function getCustomMode(customMode: string): typeof modes[string] {
-  let decodedData = JSON.parse(Base64.decode(customMode));
-
-  let newMode: typeof modes[string] = {
-    name: "Custom Level",
-    time: decodedData.ts,
-    amount: decodedData.qc as any,
-    gen: shuffle(decodedData.l.map((v: string) => modes[v].gen) as (() => Problem)[])[0],
-  };
-  return newMode;
+function getCustomMode(customMode: string) {
+  try {
+    let decodedData = JSON.parse(Base64.decode(customMode));
+    console.log(decodedData);
+    let newMode: typeof modes[string] & { gamemode: "countdown" | "timed" } = {
+      name: decodedData.n,
+      time: decodedData.ts,
+      amount: decodedData.qc as any,
+      gen: shuffle(decodedData.l.map((v: string) => modes[v].gen) as (() => Problem)[])[0],
+      gamemode: decodedData.gm,
+    };
+    return newMode;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
 }
 
 function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
@@ -60,10 +65,10 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
   const [ans, setAns] = useState("");
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [printAmountQuestions, setPrintAmountQuestions] = useState(10);
-  const [gamemode, setGamemode] = useState<"countdown" | "timed">("countdown");
+  const [gamemode, setGamemode] = useState<"countdown" | "timed">(null);
 
   // let { mode }: { mode: string } = useParams();
-  let game = customMode ? getCustomMode(mode) : modes[mode];
+  let game: typeof modes[string] & { gamemode?: "countdown" | "timed" } = customMode ? getCustomMode(mode) : modes[mode];
 
   const { printMode, setPrintMode } = usePrintMode();
 
@@ -150,9 +155,21 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
 
   useEffect(() => {
     window["Base64"] = Base64;
+
+    if (!gamemode && game?.gamemode) setGamemode(game.gamemode);
   }, []);
 
-  return (
+  return customMode && !game ? (
+    <div>
+      <Head>
+        <title>Error - Invalid Custom Level</title>
+      </Head>
+      <div className="container text-center">
+        <h1>Invalid Custom Level</h1>
+        <p>The custom level is invalid.</p>
+      </div>
+    </div>
+  ) : (
     <>
       <Head>{`${game?.name.replace(/<sup>(.*)<\/sup>/g, `^$1`)} | Math Challenges`}</Head>
       <div className="container">
@@ -230,10 +247,17 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
           <div className="text-center">
             <p>Countdown: Answer as many questions as you can in under {game.time} seconds.</p>
             <p>Timed: Answer {game.amount} questions correctly as fast as you can.</p>
-            <button type="button" className="btn btn-primary btn-lg" onClick={() => startGame("timed")}>
-              <span className="badge rounded-pill bg-info me-1">New</span>
-              Play Timed
-            </button>
+            {gamemode === "countdown" ? (
+              <button type="button" className="btn btn-primary btn-lg" onClick={() => startGame("countdown")}>
+                {gamemode && <span className="badge rounded-pill bg-warning me-2">Selected Mode</span>}
+                Play Countdown
+              </button>
+            ) : (
+              <button type="button" className="btn btn-primary btn-lg" onClick={() => startGame("timed")}>
+                {gamemode ? <span className="badge rounded-pill bg-warning me-2">Selected Mode</span> : <span className="badge rounded-pill bg-info me-1">New</span>}
+                Play Timed
+              </button>
+            )}
             <br />
             <button type="button" className="btn btn-primary mt-3 me-2" onClick={() => startGame("countdown")}>
               Play Countdown
