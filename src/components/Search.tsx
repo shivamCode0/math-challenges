@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "components/NewNextLink";
+import Link from "next/link";
 import { getQuery, searchModes } from "./../util/searchModes";
 
 function Search({ search, setSearch }: { search: string; setSearch(arg0: any): any }) {

@@ -1,12 +1,13 @@
-// const withPWA = require("next-pwa");
-// const runtimeCaching = require("next-pwa/cache");
-
 /**
  * @type {import('next').NextConfig}
  **/
 let nextConfig = {
   reactStrictMode: true,
   swcMinify: false,
+
+  experimental: {
+    appDir: true,
+  },
 
   async rewrites() {
     return [
@@ -29,14 +30,6 @@ let nextConfig = {
       },
     ];
   },
-
-  // pwa: {
-  //   dest: "public",
-  //   sw: "service-worker.js",
-  //   runtimeCaching,
-  //   buildExcludes: [/middleware-manifest.json$/],
-  //   disable: process.env.NODE_ENV === "development",
-  // },
 
   /**
    *
@@ -77,5 +70,4 @@ let nextConfig = {
   },
 };
 
-module.exports = // withPWA
-  nextConfig;
+module.exports = nextConfig;

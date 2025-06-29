@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "next/head";
-import Link from "components/NewNextLink";
+import Link from "next/link";
 
 function About() {
   return (

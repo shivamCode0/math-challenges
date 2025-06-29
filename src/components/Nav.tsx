@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import NavbarNav from "react-bootstrap/Nav";
 import logo from "./../img/math-app.png";
-import Link from "components/NewNextLink";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useDarkMode } from "contexts/useDarkMode";
 
@@ -21,12 +21,6 @@ function Nav({ searchQuery, setSearchQuery }) {
               Math Challenges
             </span>
           </Link>
-          {/* <a href="/">
-            <img src={logo} alt="" style={{ height: "2rem" }} className="me-2" />
-          </a>
-          <a href="/" className="navbar-brand me-0 me-sm-3" style={{ verticalAlign: "middle" }}>
-            Math Challenges
-          </a> */}
         </div>
 
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -36,7 +30,6 @@ function Nav({ searchQuery, setSearchQuery }) {
               Home: "/",
               About: "/about",
               Levelmaker: "/levelmaker",
-              // AMC: "https://mtrainer.ga",
             }).map(([k, v]) => (
               <Link key={k} href={v} passHref legacyBehavior>
                 <NavbarNav.Link active={v == pathname} aria-current="page">
@@ -61,9 +54,6 @@ function Nav({ searchQuery, setSearchQuery }) {
                 onChange={(e) => setSearchQuery(e.target.value.trimStart().replace(/[\s]{2,}/gi, " "))}
                 value={searchQuery}
               />
-              {/* <button type="button" className="btn btn-outline-success">
-                <i className="fas fa-magnifying-glass" />
-              </button> */}
             </div>
           </div>
         </Navbar.Collapse>
