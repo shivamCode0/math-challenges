@@ -19,17 +19,18 @@ function About() {
       <h2>How to Use</h2>
       <p>
         Math Challenges is very simple to use. All you have to do is select the
-        category, pick a level, and start. Countdown Mode: Each level has a set
-        amount of time for you to answer as many questions correctly as
-        possible. At the end, you will get a score based on your answers.
+        category, pick a level, and start.
       </p>
-
       <p>
         Timed Mode: Answer a certain amount of questions correctly as fast as
         you can. You will get a score based on how fast you answered the
         questions.
       </p>
-
+      <p>
+        Countdown Mode: Each level has a set amount of time for you to answer as
+        many questions correctly as possible. At the end, you will get a score
+        based on your answers.
+      </p>
       <h2>Info</h2>
       <p>
         This website was made by{" "}

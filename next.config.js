@@ -12,6 +12,15 @@ module.exports = {
     ];
   },
 
+  /**
+   *
+   * @param {import("webpack").Configuration} config
+   * @param {Object} options
+   * @param {boolean} options.dev
+   * @param {import("webpack").default} options.webpack
+   * @param {string} options.buildId
+   * @returns
+   */
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     if (!isServer) {
       if (!dev) {
