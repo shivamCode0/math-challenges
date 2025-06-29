@@ -1,24 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { rand, shuffle, rs, pyTriplesCalc, eqFix, isPrime, lcm, gcf, pyTriples30, pyQuadruples30, zip, divByGCF, matrixMult, matrixToTex, matrixTranspose } from "./methods";
+import { rand, shuffle, rs, eqFix, isPrime, lcm, gcf, pyTriples30, pyQuadruples30, zip, divByGCF, matrixMult, matrixToTex, matrixTranspose } from "./methods";
 import Tex from "../components/Tex";
-// import * as math from "./math";
 import right_triangle from "./../img/right-triangle.svg";
 import React from "react";
 
-enum ProblemType {
+export enum ProblemType {
   MC = "MultipleChoice",
   Text = "Text",
 }
-
-type Problem = {
-  q: JSX.Element | string;
-  ans?: string | number;
-  opts: {
-    text: string | JSX.Element;
-    correct: boolean;
-  }[];
-  type?: ProblemType;
-};
 
 const add = (min: number, max: number): Problem => {
   let a = rand(min, max);
@@ -920,8 +909,6 @@ const s = {
 };
 
 export default s;
-export type { Problem };
-export { ProblemType };
 
 /*
   subtracting fractions

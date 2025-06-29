@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { nanoid } from "nanoid";
 import { useMemo } from "react";
-import { Problem, ProblemType } from "../util/gen";
-import xIcon from "./../img/x.svg";
-import checkIcon from "./../img/check.svg";
+import { ProblemType } from "util/gen";
+import xIcon from "img/x.svg";
+import checkIcon from "img/check.svg";
 
 const ProblemView = ({ problem, selectAns, showAns, newProblem, answerNumber }: { problem: Problem; selectAns(v: any): void; showAns: boolean; newProblem(): void; answerNumber(v: string): any }) => {
   const [ansText, setAnsText] = useState("");

@@ -1,21 +1,19 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
-import { Problem, ProblemType } from "../../util/gen";
-import checkIcon from "./../../img/check.svg";
-import xIcon from "./../../img/x.svg";
-// import modes from "../../util/modes";
-import ProblemView from "../../components/ProblemView";
-import { roundDec } from "../../util/methods";
-import ReactDOM from "react-dom";
+import React, { useEffect, useState } from "react";
+import ProblemView from "components/ProblemView";
+import { usePrintMode } from "contexts/PrintModeContext";
+import checkIcon from "img/check.svg";
+import logo from "img/math-app.png";
+import xIcon from "img/x.svg";
 import { nanoid } from "nanoid";
-import logo from "./../../img/math-app.png";
-import Modal from "react-bootstrap/Modal";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { usePrintMode } from "../../contexts/PrintModeContext";
-import Link from "next/link";
 import Head from "next/head";
+import Link from "next/link";
+import Modal from "react-bootstrap/Modal";
+import ReactDOM from "react-dom";
 import { Base64 } from "util/base64";
-import { shuffle } from "../../util/methods";
+import { roundDec, shuffle } from "util/methods";
+import modes from "util/modes";
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => ({
   paths: Object.keys((await import("util/modes")).default).map((m) => ({ params: { mode: m } })),
@@ -35,13 +33,11 @@ export const getStaticProps: GetStaticProps = async function (ctx) {
     return { props: { mode: modeId, customMode: false } };
   }
 };
-type Awaited<T> = T extends PromiseLike<infer U> ? U : T;
 
-async function getCustomMode(customMode: string) {
+function getCustomMode(customMode: string): typeof modes[string] {
   try {
     let decodedData = JSON.parse(Base64.decode(customMode));
     console.log(decodedData);
-    let modes = (await import("util/modes")).default;
     let newMode: typeof modes[string] & { gamemode: "countdown" | "timed" } = {
       name: decodedData.n,
       time: decodedData.ts,
@@ -57,7 +53,7 @@ async function getCustomMode(customMode: string) {
 }
 
 function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
-  const [modes, setModes] = useState(null);
+  // const [modes, setModes] = useState(null);
 
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
@@ -69,13 +65,15 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [printAmountQuestions, setPrintAmountQuestions] = useState(10);
   const [gamemode, setGamemode] = useState<"countdown" | "timed">(null);
-  const [game, setGame] = useState<typeof modes[string] & { gamemode?: "countdown" | "timed" }>(null);
+  // const [game, setGame] = useState<typeof modes[string] & { gamemode?: "countdown" | "timed" }>(null);
 
-  useEffect(() => {
-    if (modes) setGame(customMode ? getCustomMode(mode) : modes[mode]);
-    else import("util/modes").then(({ default: modes }) => setModes(modes));
-  }, [modes]);
+  // useEffect(() => {
+  //   setGame(customMode ? getCustomMode(mode) : modes[mode]);
+  //   // else import("util/modes").then(({ default: modes }) => setModes(modes));
+  // }, [modes]);
   // let { mode }: { mode: string } = useParams();
+
+  const game: typeof modes[string] & { gamemode?: "countdown" | "timed" } = customMode ? getCustomMode(mode) : modes[mode];
 
   const { printMode, setPrintMode } = usePrintMode();
 
@@ -187,7 +185,87 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
           integrity="sha384-zTROYFVGOfTw7JV7KUu8udsvW2fx4lWOsCEDqhBreBwlHI4ioVRtmIvEThzJHGET"
           crossOrigin="anonymous"
         />
+
+        {game.meta && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(
+                (() => {
+                  let questions = game.meta.questions.map((q) => {
+                    let answers = q.answers.map((a, i) => ({
+                      "@type": "Answer",
+                      position: i,
+                      encodingFormat: "text/markdown",
+                      text: a.text,
+                      correct: a.correct,
+                    }));
+
+                    let suggestedAnswer1 = answers
+                      .filter((a) => !a.correct)
+                      .map((a) => {
+                        let { correct: _, ...temp } = { ...a };
+                        return temp;
+                      });
+                    let suggestedAnswer = suggestedAnswer1.length === 1 ? suggestedAnswer1[0] : suggestedAnswer1;
+
+                    let acceptedAnswer1 = answers
+                      .filter((a) => a.correct)
+                      .map((a) => {
+                        let { correct: _, ...temp } = { ...a };
+                        return temp;
+                      });
+                    let acceptedAnswer = acceptedAnswer1.length === 1 ? acceptedAnswer1[0] : acceptedAnswer1;
+
+                    return {
+                      "@type": "Question",
+                      eduQuestionType: "Multiple choice",
+                      learningResourceType: "Practice problem",
+                      name: game.name,
+                      text: q.text,
+                      comment: {
+                        "@type": "Comment",
+                        text: q.comment,
+                      },
+                      encodingFormat: "text/markdown",
+                      suggestedAnswer,
+                      acceptedAnswer,
+                    };
+                  });
+                  let hasPart = questions.length === 1 ? questions[0] : questions;
+
+                  return {
+                    "@context": "https://schema.org/",
+                    "@type": "Quiz",
+                    typicalAgeRange: `${game.meta.age - 1}-${game.meta.age + 1}`,
+                    educationalLevel: "intermediate",
+                    assesses: game.meta.skills,
+                    educationalAlignment: [
+                      {
+                        "@type": "AlignmentObject",
+                        alignmentType: "educationalSubject",
+                        targetName: "Mathematics",
+                      },
+                      {
+                        "@type": "AlignmentObject",
+                        alignmentType: "educationalSubject",
+                        targetName: "Algebra",
+                      },
+                    ],
+                    name: game.name,
+                    about: {
+                      "@type": "Thing",
+                      name: `Quiz about ${game.name}`,
+                    },
+                    hasPart,
+                  };
+                })()
+              ),
+            }}
+          />
+        )}
       </Head>
+
       <div className="container">
         {(showPrintModal || printMode) &&
           ReactDOM.createPortal(
@@ -245,6 +323,7 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
             document.getElementById("print-page-root")
           )}
         <h1 className="text-center my-3" dangerouslySetInnerHTML={{ __html: game?.name }} />
+        {customMode && <p className="text-center">Custom Level</p>}
         <hr />
         {gameStarted && !gameEnded ? (
           <div style={{ position: "relative" }}>
@@ -276,9 +355,15 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
               </button>
             )}
             <br />
-            <button type="button" className="btn btn-primary mt-3 me-2" onClick={() => startGame("countdown")}>
-              Play Countdown
-            </button>
+            {gamemode === "countdown" ? (
+              <button type="button" className="btn btn-primary mt-3 me-2" onClick={() => startGame("timed")}>
+                Play Timed
+              </button>
+            ) : (
+              <button type="button" className="btn btn-primary mt-3 me-2" onClick={() => startGame("countdown")}>
+                Play Countdown
+              </button>
+            )}
             <button type="button" className="btn btn-primary btn mt-3" onClick={() => setShowPrintModal(true)}>
               Make Worksheet
             </button>

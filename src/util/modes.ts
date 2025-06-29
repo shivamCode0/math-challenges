@@ -1,5 +1,4 @@
 import gen from "./gen";
-import type { Problem } from "./gen";
 
 const modes: {
   [k: string]: {
@@ -7,20 +6,84 @@ const modes: {
     gen(): Problem;
     time: number;
     amount: number;
+    meta?: {
+      topic: string;
+      skills: string;
+      age?: number;
+      questions: {
+        text: string;
+        comment?: string;
+        answers: { text: string; correct: boolean }[];
+      }[];
+    };
   };
 } = Object.fromEntries(
-  [
+  (<(Omit<Mode, "gen"> & { id: string })[]>[
     {
       name: "Adding one-digit numbers",
       id: "add1",
       time: 30,
       amount: 20,
+      meta: {
+        topic: "Addition",
+        skills: "addition, simple arithmetic",
+        age: 4,
+        questions: [
+          {
+            text: "Evaluate: $$8 + 7$$",
+            answers: [
+              { text: "1", correct: false },
+              { text: "15", correct: true },
+              { text: "16", correct: false },
+              { text: "13", correct: false },
+            ],
+            comment: "Check your answer.",
+          },
+          {
+            text: "Evaluate: $$4 + 2$$",
+            answers: [
+              { text: "6", correct: true },
+              { text: "7", correct: false },
+              { text: "2", correct: false },
+              { text: "8", correct: false },
+            ],
+            comment: "Verify your work.",
+          },
+        ],
+      },
     },
     {
       name: "Adding numbers 1 - 100",
       id: "add2",
       time: 60,
       amount: 12,
+      meta: {
+        topic: "Addition",
+        skills: "addition, simple arithmetic",
+        age: 6,
+        questions: [
+          {
+            text: "Evaluate: $$27 + 44$$",
+            answers: [
+              { text: "31", correct: false },
+              { text: "89", correct: false },
+              { text: "71", correct: true },
+              { text: "73", correct: false },
+            ],
+            comment: "Check your answer.",
+          },
+          {
+            text: "Evaluate: $$19 + 6$$",
+            answers: [
+              { text: "25", correct: true },
+              { text: "23", correct: false },
+              { text: "27", correct: false },
+              { text: "13", correct: false },
+            ],
+            comment: "Verify your work.",
+          },
+        ],
+      },
     },
     {
       name: "Adding numbers up to 10,000",
@@ -381,7 +444,9 @@ const modes: {
       id: "test",
       time: 10000000000,
     },
-  ].map((v, i) => [v.id, { name: v.name, gen: gen[v.id], time: v.time, amount: v.amount || 10 }])
+  ]).map((v, i) => [v.id, { name: v.name, gen: gen[v.id], time: v.time, amount: v.amount || 10, ...(!!v.meta && { meta: v.meta }) }])
 );
 
 export default modes;
+
+export type Mode = typeof modes[string];
