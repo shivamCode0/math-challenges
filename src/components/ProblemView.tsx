@@ -2,10 +2,9 @@
 import { useEffect, useRef, useState } from "react";
 import { nanoid } from "nanoid";
 import { useMemo } from "react";
-import { ProblemType } from "util/gen";
 import xIcon from "img/x.svg";
 import checkIcon from "img/check.svg";
-import { Problem } from "types";
+import { ProblemType } from "util/import-types";
 
 function useAsyncReference<T>(value: T, isProp = false) {
   const ref = useRef(value);

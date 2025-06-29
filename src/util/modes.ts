@@ -1,4 +1,3 @@
-import { Problem } from "types";
 import gen from "./gen";
 
 const modesRaw = [

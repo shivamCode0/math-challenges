@@ -1,16 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { rand, shuffle, rs, eqFix, isPrime, lcm, gcf, pyTriples30, pyQuadruples30, zip, divByGCF, matrixMult, matrixToTex, matrixTranspose } from "./methods";
+import { rand, shuffle, rs, eqFix, genPrimes, lcm, gcf, pyTriples30, pyQuadruples30, zip, divByGCF, matrixMult, matrixToTex, matrixTranspose, isPrime } from "./methods";
 import Tex from "components/Tex";
 import right_triangle from "img/right-triangle.svg";
 import React from "react";
 import { evalLatex, renderFunc } from "./renderFunc";
-import { Problem } from "types";
-
-export enum ProblemType {
-  MC = "MultipleChoice",
-  Text = "Text",
-  Custom = "Custom",
-}
+import { ProblemType } from "./import-types";
+import sample from "lodash/sample";
 
 const add = (min: number, max: number): Problem => {
   console.log(1, "a");
@@ -1026,6 +1021,38 @@ const algSimp = (max: number, complexity = 2): Problem => {
   };
 };
 
+/**
+ * Is Prime or composite
+ */
+
+const isPrimeLevel = (max: number, hard = false): Problem => {
+  let p = Math.random() > 0.5;
+  let n = p ? sample(genPrimes(max)) : 2;
+  if (!p) while (isPrime(n)) n = rand(2, max);
+
+  return {
+    q: (
+      <>
+        Evaluate the following expression:
+        <br />
+        <div className="pdiv1">
+          <Tex tex={`Is ${n} prime or composite?`} />
+          <br />
+
+          {/* <br /> */}
+          <hr className="mb-2 mt-1" />
+        </div>
+      </>
+    ),
+    ans: p ? "Prime" : "Composite",
+    opts: [
+      { text: "Prime", correct: p },
+      { text: "Composite", correct: !p },
+    ],
+    type: ProblemType.MC,
+  };
+};
+
 const s: { [k: string]: () => Problem | Promise<Problem> } = {
   add1: () => add(1, 9),
   add2: () => add(1, 100),
@@ -1090,6 +1117,10 @@ const s: { [k: string]: () => Problem | Promise<Problem> } = {
   lcm1: () => lcmProblem(3, 10, 50),
   lcm2: () => lcmProblem(6, 15, 100),
   lcm3: () => lcmProblem(10, 50, 300),
+
+  prime1: () => isPrimeLevel(20),
+  prime2: () => isPrimeLevel(100),
+  prime3: () => isPrimeLevel(1000),
 
   distance1: () => distanceProblem(-10, 10, 0, 5),
   distance2: () => distanceProblem(-15, 15, 0, 15),
