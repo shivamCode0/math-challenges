@@ -1,5 +1,6 @@
 import React from "react";
 import Head from "next/head";
+import Link from "next/link";
 
 function About() {
   return (
@@ -40,6 +41,15 @@ function About() {
         .
       </p>
       <p>Contact: support@shivam.pro</p>
+      <p>
+        <Link href="/legal/terms">
+          <a>Terms of Service</a>
+        </Link>{" "}
+        •{" "}
+        <Link href="/legal/privacy">
+          <a>Privacy Policy</a>
+        </Link>
+      </p>
     </div>
   );
 }
