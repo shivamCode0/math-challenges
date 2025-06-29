@@ -20,6 +20,15 @@ let nextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: "/amc",
+        destination: "https://mtrainer.ga",
+        permanent: true,
+      },
+    ];
+  },
 
   // pwa: {
   //   dest: "public",
