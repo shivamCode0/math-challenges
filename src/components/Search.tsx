@@ -34,9 +34,8 @@ function Search({ search, setSearch }: { search: string; setSearch(arg0: any): a
               }}
               className="text-indigo"
               dangerouslySetInnerHTML={{ __html: highlightSearch(v.name) }}
-              onClick={() => setSearch("")}>
-
-            </Link>
+              onClick={() => setSearch("")}
+            />
           </li>
         ))}
       </ul>

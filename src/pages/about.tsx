@@ -42,13 +42,8 @@ function About() {
       </p>
       <p>Contact: support@shivam.pro</p>
       <p>
-        <Link href="/legal/terms">
-          Terms of Service
-        </Link>{" "}
-        •{" "}
-        <Link href="/legal/privacy">
-          Privacy Policy
-        </Link>
+        <Link href="/legal/terms">Terms of Service</Link> •{" "}
+        <Link href="/legal/privacy">Privacy Policy</Link>
       </p>
     </div>
   );
