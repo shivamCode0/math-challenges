@@ -105,3 +105,17 @@ img.emoji {
 .level-group {
   min-width: 18rem;
 }
+
+// animate rotating
+.rotate-inf {
+  animation: rotate-inf infinite 60s linear;
+}
+
+@keyframes rotate-inf {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

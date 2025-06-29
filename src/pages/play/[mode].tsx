@@ -5,6 +5,7 @@ import { usePrintMode } from "contexts/PrintModeContext";
 import checkIcon from "img/check.svg";
 import logo from "img/math-app.png";
 import xIcon from "img/x.svg";
+import timeIcon from "img/time.svg";
 import { nanoid } from "nanoid";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Head from "next/head";
@@ -110,7 +111,7 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
     setGamemode(gm);
 
     if (gm === "countdown") {
-      setTime(game.time);
+      setTime(game.time * 10);
     } else if (gm === "timed") {
       setTime(0);
     }
@@ -124,7 +125,7 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
 
     if (gamemode === "countdown") {
       let timeoutID: NodeJS.Timeout;
-      if (gameStarted && time > 0) timeoutID = setTimeout(() => setTime((pv) => pv - 1), 1000);
+      if (gameStarted && time > 0) timeoutID = setTimeout(() => setTime((pv) => pv - 1), 100);
       if (time === 0) {
         setGameStarted(false);
         setGameEnded(true);
@@ -132,20 +133,25 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
       return () => clearTimeout(timeoutID);
     } else if (gamemode === "timed") {
       let timeoutID: NodeJS.Timeout;
-      if (gameStarted) timeoutID = setTimeout(() => setTime((pv) => pv + 1), 1000);
+      if (gameStarted) timeoutID = setTimeout(() => gameStarted && setTime((pv) => pv + 1), 100);
       if (ansCorrectHistory.length === game.amount) {
         setGameStarted(false);
         setGameEnded(true);
       }
       return () => clearTimeout(timeoutID);
     }
-  }, [time, gamemode, ansCorrectHistory]);
+  }, [time, gamemode, ansCorrectHistory, gameStarted]);
   //
-  function formatSeconds(totalSecs: number) {
+  function formatSeconds(totalDSecs: number) {
+    let totalSecs = totalDSecs / 10;
     let m = Math.floor(totalSecs / 60);
     let s = totalSecs % 60;
 
-    return `${m}:${s.toString().padStart(2, "0")}`;
+    if (m > 0) return `${m}:${Math.round(s).toString().padStart(2, "0")}`;
+    else
+      return `${s.toLocaleString(undefined, {
+        minimumFractionDigits: 1,
+      })}s`;
   }
 
   useEffect(() => {
@@ -328,8 +334,12 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
         {gameStarted && !gameEnded ? (
           <div style={{ position: "relative" }}>
             <div>
-              <div className="p-auto mx-auto border-primary" style={{ height: "4rem", width: "4rem", border: "4px solid", textAlign: "center", position: "relative", borderRadius: "50%" }}>
-                <p style={{ margin: 0, position: "absolute", top: "50%", transform: "translateY(-50%)", textAlign: "center", width: "100%", fontSize: "1.5rem" }}>{formatSeconds(time)}</p>
+              <div className="p-auto mx-auto border-dark" style={{ height: "3rem", width: "6rem", border: "4px solid", textAlign: "center", position: "relative", borderRadius: "8px" }}>
+                <p className="mt-1 mb-0" style={{ textAlign: "center", fontSize: "1.25rem" }}>
+                  <img src={timeIcon.src} className="rotate-inf" height={32} width={32} alt="time" />
+                  {/* <TimeSymbol /> */}
+                  {formatSeconds(time)}
+                </p>
               </div>
               {gamemode === "timed" && (
                 <p className="text-center mt-2">

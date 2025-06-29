@@ -42,6 +42,7 @@ const add = (min: number, max: number): Problem => {
       { text: `${a + b + c}`, correct: false },
       { text: `${a + b + d}`, correct: false },
     ]),
+    type: ProblemType.Text,
   };
 };
 
@@ -78,6 +79,7 @@ const sub = (min: number, max: number): Problem => {
       { text: `${a - b + c}`, correct: false },
       { text: `${a - b + d}`, correct: false },
     ]),
+    type: ProblemType.Text,
   };
 };
 
@@ -114,6 +116,7 @@ const subDecimal = (decPlaces: number): Problem => {
     ),
     ans: `${ans}`,
     opts: shuffle([{ text: `${ans}`, correct: true }, ...ia.filter((v) => `${v}` !== `${ans}`)]),
+    type: ProblemType.Text,
   };
 };
 
@@ -150,6 +153,7 @@ const addDecimal = (decPlaces: number): Problem => {
     ),
     ans: `${ans}`,
     opts: shuffle([{ text: `${ans}`, correct: true }, ...ia.filter((v) => `${v}` !== `${ans}`)]),
+    type: ProblemType.Text,
   };
 };
 
@@ -177,6 +181,7 @@ const mult = (min: number, max: number): Problem => {
       { text: `${a + b}`, correct: false },
       { text: `${a * (b + 1)}`, correct: false },
     ]),
+    type: ProblemType.Text,
   };
 };
 
@@ -204,6 +209,7 @@ const div = (min: number, max: number, maxC = max): Problem => {
       { text: `${Math.round((a * b * b) / 10)}`, correct: false },
       { text: `${Math.floor(b / 2) - 1 === a ? Math.floor(b / 2) : Math.floor(b / 2) - 1}`, correct: false },
     ]),
+    type: ProblemType.Text,
   };
 };
 
@@ -812,6 +818,80 @@ const matrixMultProblem = (max: number, minD = 2, maxD = minD): Problem => {
   };
 };
 
+/**
+ * Algebraic Simplification
+ */
+const algSimp = (max: number, complexity = 2): Problem => {
+  let forms: (() => {
+    expr: string;
+    ans: string;
+  })[][] = [
+    // easy
+    [
+      () => {
+        // 4 vars
+        let a = rand(-max, max);
+        let b = rand(-max, max);
+        let c = rand(-max, max);
+        let d = rand(-max, max);
+
+        return {
+          expr: `${a}x + ${b}y + ${c}x + ${d}y`,
+          ans: `${a + c}x + ${b + d}y`,
+        };
+      },
+    ],
+    // medium
+    [
+      () => {
+        let a = rand(1, max);
+        let b = rand(-max, max, { no0: true });
+        return {
+          expr: `{(x + ${a})}^2 + ${b}`,
+          ans: `${2 * a}x + ${b + a ** 2}`,
+        };
+      },
+    ],
+    // hard
+    [
+      () => {
+        let a = rand(-max, max, { no0: true });
+        let b = rand(-max, max, { no0: true });
+        let c = rand(-max, max, { no0: true });
+        let d = rand(-max, max, { no0: true });
+        let e = rand(-max, max, { no0: true });
+        let f = rand(-max, max, { no0: true });
+        let g = rand(-max, max, { no0: true });
+        let h = rand(-max, max, { no0: true });
+        let i = rand(-max, max, { no0: true });
+        return {
+          // (ax + by)^2 + (cx + dy)^2 + (x + e)^2 + (y + f)^2 + gx + hy + i
+          expr: `{(${a}x + ${b}y)}^2 + {(${c}x + ${d}y)}^2 + {(x + ${e})}^2 + {(y + ${f})}^2 + ${g}x + ${h}y + ${i}`,
+          ans: `${a ** 2 + c ** 2}x + ${b ** 2 + d ** 2}y + ${2 * (a * b + c * d)}xy + ${2 * e + g}x + ${2 * f + h}y +${e ** 2 + f ** 2 + i}`,
+        };
+      },
+    ],
+  ];
+
+  let { expr, ans } = forms[complexity][rand(0, forms[complexity].length - 1)]();
+
+  return {
+    q: (
+      <>
+        Simplify the following expression: <br />
+        <br />
+        <Tex tex={eqFix(expr)} />
+      </>
+    ),
+    ans,
+    opts: shuffle([
+      { text: <Tex tex={eqFix(`${ans}`)} />, correct: true },
+      { text: <Tex tex={eqFix(`1+1`)} />, correct: false },
+    ]),
+    type: ProblemType.Text,
+  };
+};
+
 const s: { [k: string]: () => Problem } = {
   add1: () => add(1, 9),
   add2: () => add(1, 100),
@@ -905,7 +985,7 @@ const s: { [k: string]: () => Problem } = {
   matrix_mult2: () => matrixMultProblem(5, 3),
   matrix_mult3: () => matrixMultProblem(6, 4),
 
-  test: () => matrixMultProblem(4, 2),
+  test: () => algSimp(6, 2),
   test2: () => matrixMultProblem(15, 14),
 };
 
