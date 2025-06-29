@@ -2,10 +2,9 @@ import Link from "next/link";
 import Head from "next/head";
 import categories from "../util/categories";
 import banner from "./../img/banner.jpg";
-import { For, block } from "million/react";
 // import { useDarkMode } from "contexts/useDarkMode";
 
-const Home = block(function () {
+export default function Home() {
   // const dm = useDarkMode();
 
   return (
@@ -42,24 +41,20 @@ const Home = block(function () {
       <p className="text-center my-3">Test yourself with these fast-paced challenges.</p> */}
         <hr className="mt-2" />
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-          <For each={categories}>
-            {(v) => (
-              <Link href={`/c/${v.id}`} key={v.id} className="category-item card-1" style={{ borderColor: v.color }}>
-                {/* <img src={v.img} className="card-img-top" alt="" /> */}
-                <span className={`imgcolor-${v.img}`}>
-                  <img src={`https://cdn.shivam.pro/app-static-data/images/cubes-thumbnail/cubes-blue.png`} alt="" className={`card-img-top trans-filter dark-image`} />
-                </span>
-                <div className="card-body">
-                  <h4 className="card-title">{v.title}</h4>
-                  <p className="card-text">{v.desc}</p>
-                </div>
-              </Link>
-            )}
-          </For>
+          {categories.map((v) => (
+            <Link href={`/c/${v.id}`} key={v.id} className="category-item card-1" style={{ borderColor: v.color }}>
+              {/* <img src={v.img} className="card-img-top" alt="" /> */}
+              <span className={`imgcolor-${v.img}`}>
+                <img src={`https://cdn.shivam.pro/app-static-data/images/cubes-thumbnail/cubes-blue.png`} alt="" className={`card-img-top trans-filter dark-image`} />
+              </span>
+              <div className="card-body">
+                <h4 className="card-title">{v.title}</h4>
+                <p className="card-text">{v.desc}</p>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
   );
-});
-
-export default Home;
+}

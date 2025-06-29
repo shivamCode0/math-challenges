@@ -1,4 +1,4 @@
-import million from "million/compiler";
+// import million from "million/compiler";
 // const million = require("million/compiler");
 
 /**
@@ -7,10 +7,6 @@ import million from "million/compiler";
 let nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-
-  experimental: {
-    appDir: true,
-  },
 
   async rewrites() {
     return [{ source: "/sitemap.txt", destination: "/api/sitemap.txt" }];
@@ -47,7 +43,7 @@ let nextConfig = {
           reportTitle: `${isServer ? "Server" : "Client"} Bundle Size - Math Challenges`,
           openAnalyzer: true,
           reportFilename: `./static/bundlereport/${isServer ? "server" : "client"}.html`,
-        })
+        }),
       );
     }
 
@@ -55,6 +51,6 @@ let nextConfig = {
   },
 };
 
-export default million.next(nextConfig);
+export default nextConfig;
 // export default nextConfig;
 // module.exports = million.next(nextConfig);

@@ -5,7 +5,6 @@ import type { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import Head from "next/head";
 import { useDarkMode } from "contexts/useDarkMode";
-import { block } from "million/react";
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => ({
   paths: categories.map((c) => ({ params: { category: c.id } })),
@@ -33,7 +32,7 @@ const CategoryPage = function CategoryPage({ category }: { category: (typeof cat
         name: string;
         mode: string;
       }[][];
-    }[]
+    }[],
   ) => (
     <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
       {data.map((v) => (
@@ -91,6 +90,4 @@ const CategoryPage = function CategoryPage({ category }: { category: (typeof cat
   );
 };
 
-const CategoryPageBlock = block(CategoryPage as any);
-// export default CategoryPageBlock;
 export default CategoryPage;
