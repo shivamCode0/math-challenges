@@ -33,10 +33,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   let filterText = mapping[comp];
   if (!filterText) return { notFound: true };
   return {
-    props: {
-      filterText,
-      comp,
-    }, // will be passed to the page component as props
+    props: { filterText, comp }, // will be passed to the page component as props
   };
 };
 
@@ -69,7 +66,7 @@ function AMCPractice({ filterText, comp }) {
   }, [problem]);
 
   return (
-    <div className="container-md mt-3 amc-root">
+    <div className="container-md mt-3 amc-root" style={{ maxWidth: "60em" }}>
       <Head>
         <title>Competition Problems</title>
         <meta name="description" content="Math Competition training problems and practice" key="desc" />
@@ -97,9 +94,11 @@ function AMCPractice({ filterText, comp }) {
           </div>
         </div>
       )}
-      <button className="btn btn-primary mb-3" onClick={regen}>
-        New Problem
-      </button>
+      <div className="text-center">
+        <button className="btn btn-primary mb-3" onClick={regen}>
+          New Problem
+        </button>
+      </div>
     </div>
   );
 }
