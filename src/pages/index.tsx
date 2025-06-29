@@ -11,7 +11,7 @@ function Home() {
         <link rel="canonical" href="https://math.shivam.pro" />
       </Head>
       <div className="container col-xxl-8 px-4 py-3 pb-0">
-        <div className="row flex-md-row-reverse align-items-center g-3 py-3 pb-0">
+        <div className="row flex-md-row-reverse g-3 py-3 pb-0" style={{ alignItems: "center" }}>
           <div className="col-10 col-sm-8 col-md-6">
             <img src={banner.src} className="d-block mx-lg-auto img-fluid" alt="" loading="lazy" style={{ height: "12rem", maxHeight: "calc(10vh + 10vw)", objectFit: "cover" }} />
           </div>
