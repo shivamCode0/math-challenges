@@ -8,6 +8,7 @@ function Home() {
     <div>
       <Head>
         <title>Math Challenges - Improve and Test Your Math Skills</title>
+        <link rel="canonical" href="https://math.shivam.pro" />
       </Head>
       <div className="container col-xxl-8 px-4 py-3 pb-0">
         <div className="row flex-md-row-reverse align-items-center g-3 py-3 pb-0">
