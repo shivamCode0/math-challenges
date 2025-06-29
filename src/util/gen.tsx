@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { rand, shuffle, rs, pyTriplesCalc, eqFix, isPrime, lcm, gcf, pyTriples30, pyQuadruples30, zip, divByGCF } from "./methods";
+import { rand, shuffle, rs, pyTriplesCalc, eqFix, isPrime, lcm, gcf, pyTriples30, pyQuadruples30, zip, divByGCF, matrixMult, matrixToTex, matrixTranspose } from "./methods";
 import Tex from "../components/Tex";
 // import * as math from "./math";
 import right_triangle from "./../img/right-triangle.svg";
@@ -384,7 +384,7 @@ const sysLinear3 = (min: number = -8, max: number = 8, minC: number = -3, maxC: 
   let z = rand(min, max);
 
   /* prettier-ignore */ let coeffs = Array(3).fill(null).map(() => Array(3).fill(null).map(() => rand(minC, maxC, { no0: true })))
-  let a23 = [];
+
   let eqs = coeffs.map(([c1, c2, c3]) => eqFix((c1 < 0 && c2 > 0 ? `${c2}y + ${c1}x + ${c3}z` : `${c1}x + ${c2}y + ${c3}z`) + ` = ${c1 * x + c2 * y + c3 * z}`));
 
   let ans = `(${x}, ${y}, ${z})`;
@@ -786,6 +786,43 @@ const qToV = (min: number, max: number, minA = min, maxA = max): Problem => {
   };
 };
 
+/**
+ */
+const matrixMultProblem = (max: number, minD = 2, maxD = minD): Problem => {
+  let a = Array(rand(minD, maxD))
+    .fill(0)
+    .map(() =>
+      Array(rand(minD, maxD))
+        .fill(0)
+        .map(() => rand(-max, max))
+    );
+  let b = Array(rand(minD, maxD))
+    .fill(0)
+    .map(() =>
+      Array(a.length)
+        .fill(0)
+        .map(() => rand(-max, max))
+    );
+
+  let ans = matrixToTex(matrixMult(a, b));
+
+  let ia = [matrixToTex(matrixMult(b, a)), matrixToTex(matrixTranspose(a)), matrixToTex(matrixTranspose(b))];
+
+  return {
+    q: (
+      <>
+        Multiply matrices.
+        <br />
+        <div>
+          <Tex tex={`${matrixToTex(a)}\\times${matrixToTex(b)}`} />
+        </div>
+      </>
+    ),
+    ans,
+    opts: shuffle([{ text: <Tex tex={eqFix(`${ans}`)} />, correct: true }, ...ia.filter((v) => JSON.stringify(v) !== JSON.stringify(ans)).map((v) => ({ text: <Tex tex={v} />, correct: false }))]),
+  };
+};
+
 const s = {
   add1: () => add(1, 9),
   add2: () => add(1, 100),
@@ -875,7 +912,11 @@ const s = {
   vertex_form2: () => qToV(-6, 6, -3, 3),
   vertex_form3: () => qToV(-8, 10, -6, 6),
 
-  test: () => qToV(-6, 6, 3),
+  matrix_mult1: () => matrixMultProblem(3, 2),
+  matrix_mult2: () => matrixMultProblem(5, 3),
+  matrix_mult3: () => matrixMultProblem(6, 4),
+
+  test: () => matrixMultProblem(4, 2),
 };
 
 export default s;

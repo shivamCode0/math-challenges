@@ -362,6 +362,21 @@ const modes: {
       time: 140,
     },
     {
+      name: "Multiply 2×2 Matrices",
+      id: "matrix_mult1",
+      time: 120,
+    },
+    {
+      name: "Multiply 3×3 Matrices",
+      id: "matrix_mult2",
+      time: 240,
+    },
+    {
+      name: "Multiply 4×4 Matrices",
+      id: "matrix_mult3",
+      time: 360,
+    },
+    {
       name: "Test",
       id: "test",
       time: 10000000000,

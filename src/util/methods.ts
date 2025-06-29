@@ -159,6 +159,10 @@ export const sum = (arr: number[]) => arr.reduce((a, c) => a + c, 0);
  */
 export const prod = (arr: number[]) => arr.reduce((a, c) => a * c, 0);
 
+export const matrixMult = (A: number[][], B: number[][]) => A.map((row, i) => B[0].map((_, j) => row.reduce((acc, _, n) => acc + A[i][n] * B[n][j], 0)));
+export const matrixToTex = (m: number[][]) => `\\begin{bmatrix} ${m.map((v) => v.join(" & ")).join(" \\\\ ")} \\end{bmatrix}`;
+export const matrixTranspose = (m: number[][]) => m[0].map((_, i) => m.map((x) => x[i]));
+
 /**
  * First 30 Pythagorean Triples
  */

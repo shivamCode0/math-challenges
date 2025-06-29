@@ -1,4 +1,3 @@
-/* eslint-disablse import/no-anonymous-default-export */
 const levels: { [k: string]: { name: string; modes: { name: string; mode: string }[][] }[] } = {
   "basic-operations": [
     {
@@ -143,6 +142,7 @@ const levels: { [k: string]: { name: string; modes: { name: string; mode: string
         ],
       ],
     },
+
     {
       name: "Quadratics",
       modes: [
@@ -160,6 +160,21 @@ const levels: { [k: string]: { name: string; modes: { name: string; mode: string
           { name: "✏ Lvl 1 - General Form to Vertex Form", mode: "vertex_form1" },
           { name: "🖊 Lvl 2 - General Form to Vertex Form", mode: "vertex_form2" },
           { name: "🖋 Lvl 3 - General Form to Vertex Form", mode: "vertex_form3" },
+        ],
+      ],
+    },
+    {
+      name: "Matrix",
+      modes: [
+        [
+          { name: "🍎 Multiply 2×2 Matrices", mode: "matrix_mult1" },
+          { name: "🍏 Multiply 3×3 Matrices", mode: "matrix_mult2" },
+          { name: "🍊 Multiply 4×4 Matrices", mode: "matrix_mult3" },
+        ],
+        [
+          { name: "📕 Level 1 -  Find y-intercept", mode: "graphyint1" },
+          { name: "📘 Level 2 - Find y-intercept", mode: "graphyint2" },
+          { name: "📚 Level 3 - Find y-intercept", mode: "graphyint3" },
         ],
       ],
     },

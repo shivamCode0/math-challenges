@@ -6,4 +6,4 @@ const Tex = ({ tex, inline = true }: { tex: string; inline?: boolean }) => {
   return <span dangerouslySetInnerHTML={{ __html: html }} data-tex={tex} />;
 };
 
-export default Tex;
+export default React.memo(Tex, (prev, next) => prev.tex === next.tex && prev.inline === next.inline);
