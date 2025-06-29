@@ -4,8 +4,12 @@ import { AMCProblem } from "types";
 import { doAll } from "util/amc";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  let a = await doAll();
-  res.send(a.path);
+  if (process.env.NODE_ENV !== "production") {
+    let a = await doAll((v) => v.includes("AMC "));
+    res.json(a);
+  } else {
+    res.send("Not allowed");
+  }
 };
 
 export default handler;

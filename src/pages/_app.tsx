@@ -21,6 +21,9 @@ function App({ Component, pageProps }) {
       <Head>
         <title>Undefined Title | Math Challenges</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"></meta>
+
+        <meta name="theme-color" content="#249e47" />
+        <meta name="description" content="Math Challenges allows you to test yourself or anyone with fun and educational math questions!" key="desc" />
       </Head>
       <ProvideDarkMode>
         <LoadingProvider>

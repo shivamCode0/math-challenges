@@ -1,11 +1,12 @@
-import katex from "katex";
-import { GetServerSideProps } from "next";
+import CompProblem from "components/CompProblem";
+// import katex from "katex";
+// import { GetServerSideProps } from "next";
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
 import { AMCProblem } from "types";
-import { makeBatch, randomProblems } from "util/amc";
-import { titleCleanup } from "util/amc-helper";
-import useFetch from "util/useFetch";
+// import { makeBatch, randomProblems } from "util/amc";
+// import { titleCleanup } from "util/amc-helper";
+// import useFetch from "util/useFetch";
 
 // export const getServerSideProps: GetServerSideProps = async (context) => {
 //   return {
@@ -20,16 +21,6 @@ function AMCTrainer() {
   const [batch, setBatch] = useState<AMCProblem[]>(null);
   // if (typeof window !== "undefined") console.log(batch);
 
-  function fixHTML(html: string) {
-    return html
-      .split("$$")
-      .map((x, i) => (i % 2 === 0 ? x : katex.renderToString(x, { throwOnError: false })))
-      .join("")
-      .split("$%$")
-      .map((x, i) => (i % 2 === 0 ? x : katex.renderToString(x, { throwOnError: false, displayMode: true })))
-      .join("");
-  }
-
   function regen() {
     localStorage.removeItem("mathchallenges_amc_batch1");
     setBatch(null);
@@ -40,21 +31,23 @@ function AMCTrainer() {
       let a = localStorage.getItem("mathchallenges_amc_batch1");
       if (a) setBatch(JSON.parse(a));
       else {
-        fetch("/api/amcproblems?v=2021 AMC 10A Problems/Problem 23")
+        fetch("/api/amcproblems?q=amc&n=5")
           .then((res) => res.json())
           .then((data) => {
-            console.log(data);
+            // console.log(data);
             setBatch(data);
             localStorage.setItem("mathchallenges_amc_batch1", JSON.stringify(data));
           })
           .catch((err) => alert(err));
       }
-    }
+    } else console.log(batch);
   }, [batch]);
 
   return (
-    <div className="container mt-3 amc-root">
+    <div className="container-md mt-3 amc-root">
       <Head>
+        <title>Competition Problems</title>
+        <meta name="description" content="Math Competition training problems and practice" key="desc" />
         <link
           rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/katex@0.13.18/dist/katex.min.css"
@@ -63,20 +56,15 @@ function AMCTrainer() {
         />
       </Head>
       <h1 className="text-center">AMC Trainer</h1>
+      <p className="text-center">
+        Credits go to <a href="https://amctrivial.com/">AMC Trivial</a> and the <a href="https://artofproblemsolving.com/wiki/">AoPS wiki</a> for making this possible.
+      </p>
       <hr />
       <button className="btn btn-primary mb-3" onClick={regen}>
         Regenerate
       </button>
       {batch ? (
-        batch.map((v) => (
-          <div key={v.title} className="card mb-3">
-            <div className="card-header">{titleCleanup(v.title)}</div>
-            <div className="card-body">
-              <p style={{ fontSize: "1em" }} dangerouslySetInnerHTML={{ __html: fixHTML(v.problem) }} />
-              {/* <p>{v.solutions}</p> */}
-            </div>
-          </div>
-        ))
+        batch.map((v) => <CompProblem key={v.title} v={v} />)
       ) : (
         <div className="text-center">
           <div className="spinner-border" style={{ height: "3rem", width: "3rem" }} role="status">

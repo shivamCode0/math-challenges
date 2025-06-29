@@ -6,8 +6,6 @@ export default class MyDocument extends Document {
     return (
       <Html lang="en">
         <Head>
-          <meta name="theme-color" content="#249e47" />
-          <meta name="description" content="Math Challenges allows you to test yourself or anyone with fun and educational math questions!" />
           {/* <link rel="stylesheet" href="https://cdn.shivam.pro/app-libs/fontawesome-pro-6.0.0-alpha3-web/css/all.min.css" /> */}
 
           {/* Fonts */}
