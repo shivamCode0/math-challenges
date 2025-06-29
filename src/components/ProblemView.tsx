@@ -88,7 +88,7 @@ const ProblemView = ({
               {showAns ? (
                 <>
                   <div style={{ textAlign: "center" }} className="pb-2 w-100">
-                    {problem.type === ProblemType.Custom
+                    {problem.type === ProblemType.Custom || problem.type === ProblemType.Text
                       ? problem.ansCustom(({ ans }) => (
                           <span className="form-control" style={{ width: "max-content", display: "inline" }}>
                             <img src={checkIcon.src} className="card-img-top w-auto m-0 me-2" alt="" style={{ height: "1.5rem" }}></img> {ans}
