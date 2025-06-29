@@ -6,7 +6,7 @@
  **/
 let nextConfig = {
   reactStrictMode: true,
-  swcMinify: false,
+  swcMinify: true,
 
   async rewrites() {
     return [
@@ -48,16 +48,16 @@ let nextConfig = {
    * @returns
    */
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    if (!isServer) {
-      if (!dev) {
-        Object.assign(config.resolve.alias, {
-          react: "preact/compat",
-          "react-dom/test-utils": "preact/test-utils",
-          "react-dom": "preact/compat", // Must be below test-utils
-          "react/jsx-runtime": "preact/jsx-runtime",
-        });
-      }
-    }
+    // if (!isServer) {
+    //   if (!dev) {
+    //     Object.assign(config.resolve.alias, {
+    //       react: "preact/compat",
+    //       "react-dom/test-utils": "preact/test-utils",
+    //       "react-dom": "preact/compat", // Must be below test-utils
+    //       "react/jsx-runtime": "preact/jsx-runtime",
+    //     });
+    //   }
+    // }
 
     if (process.env.ANALYZE) {
       const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
