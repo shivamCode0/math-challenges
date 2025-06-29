@@ -1,5 +1,6 @@
 const { PHASE_DEVELOPMENT_SERVER } = require("next/constants");
 const withPWA = require("next-pwa");
+const runtimeCaching = require("next-pwa/cache");
 // const withPWA = (a) => a;
 
 module.exports = withPWA({
@@ -9,10 +10,9 @@ module.exports = withPWA({
   pwa: {
     dest: "public",
     sw: "service-worker.js",
+    runtimeCaching,
+    buildExcludes: [/middleware-manifest.json$/],
     disable: process.env.NODE_ENV === "development",
-    // register: true,
-    // scope: '/app',
-    //...
   },
 
   /**
