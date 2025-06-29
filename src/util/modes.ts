@@ -231,7 +231,7 @@ const modes: {
     },
     {
       name: "Find the GCF of numbers 15 - 80",
-      id: "gcf2",
+      id: "gcf3",
       time: 90,
     },
     {
