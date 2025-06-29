@@ -4,6 +4,7 @@ const withPWA = require("next-pwa");
 
 module.exports = withPWA({
   reactStrictMode: true,
+  swcMinify: true,
 
   pwa: {
     dest: "public",
@@ -29,7 +30,8 @@ module.exports = withPWA({
         Object.assign(config.resolve.alias, {
           react: "preact/compat",
           "react-dom/test-utils": "preact/test-utils",
-          "react-dom": "preact/compat",
+          "react-dom": "preact/compat", // Must be below test-utils
+          "react/jsx-runtime": "preact/jsx-runtime",
         });
       }
     }

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Problem, ProblemType } from "../../util/gen";
 import checkIcon from "./../../img/check.svg";
 import xIcon from "./../../img/x.svg";
-import modes from "../../util/modes";
+// import modes from "../../util/modes";
 import ProblemView from "../../components/ProblemView";
 import { roundDec } from "../../util/methods";
 import ReactDOM from "react-dom";
@@ -18,7 +18,7 @@ import { Base64 } from "util/base64";
 import { shuffle } from "../../util/methods";
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => ({
-  paths: Object.keys(modes).map((m) => ({ params: { mode: m } })),
+  paths: Object.keys((await import("util/modes")).default).map((m) => ({ params: { mode: m } })),
   fallback: false,
 });
 
@@ -29,17 +29,19 @@ export const getStaticProps: GetStaticProps = async function (ctx) {
   if (customModeId) return { props: { mode: customModeId, customMode: true } };
   else {
     if (!modeId) return { notFound: true };
-    const mode = modes[modeId];
+    const mode = (await import("util/modes")).default[modeId];
     if (!mode) return { notFound: true };
 
     return { props: { mode: modeId, customMode: false } };
   }
 };
+type Awaited<T> = T extends PromiseLike<infer U> ? U : T;
 
-function getCustomMode(customMode: string) {
+async function getCustomMode(customMode: string) {
   try {
     let decodedData = JSON.parse(Base64.decode(customMode));
     console.log(decodedData);
+    let modes = (await import("util/modes")).default;
     let newMode: typeof modes[string] & { gamemode: "countdown" | "timed" } = {
       name: decodedData.n,
       time: decodedData.ts,
@@ -55,6 +57,8 @@ function getCustomMode(customMode: string) {
 }
 
 function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
+  const [modes, setModes] = useState(null);
+
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   const [time, setTime] = useState(-1);
@@ -65,9 +69,13 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [printAmountQuestions, setPrintAmountQuestions] = useState(10);
   const [gamemode, setGamemode] = useState<"countdown" | "timed">(null);
+  const [game, setGame] = useState<typeof modes[string] & { gamemode?: "countdown" | "timed" }>(null);
 
+  useEffect(() => {
+    if (modes) setGame(customMode ? getCustomMode(mode) : modes[mode]);
+    else import("util/modes").then(({ default: modes }) => setModes(modes));
+  }, [modes]);
   // let { mode }: { mode: string } = useParams();
-  let game: typeof modes[string] & { gamemode?: "countdown" | "timed" } = customMode ? getCustomMode(mode) : modes[mode];
 
   const { printMode, setPrintMode } = usePrintMode();
 
@@ -184,58 +192,59 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
         {(showPrintModal || printMode) &&
           ReactDOM.createPortal(
             <div className="print-only">
-              {(() => {
-                let questions = Array(printAmountQuestions)
-                  .fill(null)
-                  .map(() => game.gen());
-                return (
-                  <>
-                    <nav className="navbar navbar-expand-sm navbar-light">
-                      <div className="container-md">
-                        <div className="text-center w-100">
-                          <img src={logo.src} alt="" style={{ height: "2rem" }} className="me-2" />
-                          <span className="navbar-brand me-0 me-sm-3" style={{ verticalAlign: "middle" }}>
-                            {game.name} - Math Challenges
-                          </span>
-                        </div>
-                      </div>
-                    </nav>
-                    <hr style={{ borderTop: "1px solid var(--bs-gray-800)" }} />
-                    <div style={{ columnGap: "2rem", columnCount: 2, columnRule: "1px solid rgb(220, 220, 220)" }}>
-                      {questions.map((v, i) => (
-                        <div key={nanoid(6)} style={{ breakInside: "avoid" }}>
-                          <div style={{ textAlign: "center", fontSize: "1.25em", fontWeight: "bold" }}>{i + 1}.</div>
-                          <div style={{ textAlign: "center" }}>{v.q}</div>
-                          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-                            {v.type === ProblemType.Text ? (
-                              <div className="input-group">
-                                <input className="ms-2 form-control" type="text" style={{ width: "16px" }} />
-                              </div>
-                            ) : (
-                              <p className="text-center mb-0">
-                                {v.opts.map((v, i) => (
-                                  <span key={nanoid(6)}>
-                                    <b>{["A", "B", "C", "D", "E", "F", "G", "H"][i]}.</b> {v.text}&emsp;
-                                  </span>
-                                ))}
-                              </p>
-                            )}
+              {game &&
+                (() => {
+                  let questions = Array(printAmountQuestions)
+                    .fill(null)
+                    .map(() => game.gen());
+                  return (
+                    <>
+                      <nav className="navbar navbar-expand-sm navbar-light">
+                        <div className="container-md">
+                          <div className="text-center w-100">
+                            <img src={logo.src} alt="" style={{ height: "2rem" }} className="me-2" />
+                            <span className="navbar-brand me-0 me-sm-3" style={{ verticalAlign: "middle" }}>
+                              {game.name} - Math Challenges
+                            </span>
                           </div>
-                          <hr style={{ borderTop: "1px solid var(--bs-gray-800)" }} />
                         </div>
-                      ))}
-                    </div>
+                      </nav>
+                      <hr style={{ borderTop: "1px solid var(--bs-gray-800)" }} />
+                      <div style={{ columnGap: "2rem", columnCount: 2, columnRule: "1px solid rgb(220, 220, 220)" }}>
+                        {questions.map((v, i) => (
+                          <div key={nanoid(6)} style={{ breakInside: "avoid" }}>
+                            <div style={{ textAlign: "center", fontSize: "1.25em", fontWeight: "bold" }}>{i + 1}.</div>
+                            <div style={{ textAlign: "center" }}>{v.q}</div>
+                            <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+                              {v.type === ProblemType.Text ? (
+                                <div className="input-group">
+                                  <input className="ms-2 form-control" type="text" style={{ width: "16px" }} />
+                                </div>
+                              ) : (
+                                <p className="text-center mb-0">
+                                  {v.opts.map((v, i) => (
+                                    <span key={nanoid(6)}>
+                                      <b>{["A", "B", "C", "D", "E", "F", "G", "H"][i]}.</b> {v.text}&emsp;
+                                    </span>
+                                  ))}
+                                </p>
+                              )}
+                            </div>
+                            <hr style={{ borderTop: "1px solid var(--bs-gray-800)" }} />
+                          </div>
+                        ))}
+                      </div>
 
-                    <footer>
-                      This worksheet was generated by math.shivam.pro. If you are a student, tell your teacher that you love this worksheet. If you are a teacher, share this with other teachers!
-                    </footer>
-                  </>
-                );
-              })()}
+                      <footer>
+                        This worksheet was generated by math.shivam.pro. If you are a student, tell your teacher that you love this worksheet. If you are a teacher, share this with other teachers!
+                      </footer>
+                    </>
+                  );
+                })()}
             </div>,
             document.getElementById("print-page-root")
           )}
-        <h1 className="text-center my-3" dangerouslySetInnerHTML={{ __html: game.name }} />
+        <h1 className="text-center my-3" dangerouslySetInnerHTML={{ __html: game?.name }} />
         <hr />
         {gameStarted && !gameEnded ? (
           <div style={{ position: "relative" }}>
@@ -245,7 +254,7 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
               </div>
               {gamemode === "timed" && (
                 <p className="text-center mt-2">
-                  {ansCorrectHistory.length + (showAns ? 0 : 1)} of {game.amount}
+                  {ansCorrectHistory.length + (showAns ? 0 : 1)} of {game?.amount}
                 </p>
               )}
             </div>
@@ -253,8 +262,8 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
           </div>
         ) : !gameStarted && !gameEnded ? (
           <div className="text-center">
-            <p>Countdown: Answer as many questions as you can in under {game.time} seconds.</p>
-            <p>Timed: Answer {game.amount} questions correctly as fast as you can.</p>
+            <p>Countdown: Answer as many questions as you can in under {game?.time} seconds.</p>
+            <p>Timed: Answer {game?.amount} questions correctly as fast as you can.</p>
             {gamemode === "countdown" ? (
               <button type="button" className="btn btn-primary btn-lg" onClick={() => startGame("countdown")}>
                 {gamemode && <span className="badge rounded-pill bg-warning me-2">Selected Mode</span>}

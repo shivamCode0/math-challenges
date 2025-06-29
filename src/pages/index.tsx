@@ -2,6 +2,7 @@ import Link from "next/link";
 import Head from "next/head";
 import categories from "../util/categories";
 import banner from "./../img/banner.jpg";
+import Image from "next/image";
 
 function Home() {
   return (
@@ -10,10 +11,20 @@ function Home() {
         <title>Math Challenges - Improve and Test Your Math Skills</title>
         <link rel="canonical" href="https://math.shivam.pro" />
       </Head>
+      {/* <style jsx>{`
+        .banner-wrapper {
+          display: block;
+          height: 12rem;
+          max-height: calc(10vh + 10vw);
+        }
+      `}</style> */}
       <div className="container col-xxl-8 px-4 py-3 pb-0">
         <div className="row flex-md-row-reverse align-items-center g-3 py-3 pb-0">
           <div className="col-10 col-sm-8 col-md-6">
             <img src={banner.src} className="d-block mx-lg-auto img-fluid" alt="" loading="lazy" style={{ height: "12rem", maxHeight: "calc(10vh + 10vw)", objectFit: "cover" }} />
+            {/* <div className="banner-wrapper">
+              <Image src={banner} objectFit="cover" className="banner-img mx-lg-auto img-fluid" alt="" loading="lazy" />
+            </div> */}
           </div>
           <div className="col-md-6">
             <h1 className="display-6 lh-1 mb-3" style={{ fontWeight: 600 }}>
