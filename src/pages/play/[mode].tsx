@@ -232,8 +232,8 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
               <Scoreboard {...{ game, ansCorrectHistory, gamemode, time }} />
             </div>
             <div className="text-center mt-4" style={{}}>
-              <Link href="/">
-                <a className="btn btn-secondary m-2">Go Back</a>
+              <Link href="/" className="btn btn-secondary m-2">
+                Go Back
               </Link>
               <button
                 type="button"

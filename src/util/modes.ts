@@ -1,7 +1,7 @@
 import { Problem } from "types";
 import gen from "./gen";
 
-const modesRaw = <(Omit<Mode, "gen" | "amount"> & { amount?: number; id: string })[]>[
+const modesRaw = [
   {
     name: "Adding one-digit numbers",
     id: "add1",
@@ -458,7 +458,7 @@ const modesRaw = <(Omit<Mode, "gen" | "amount"> & { amount?: number; id: string 
     id: "test",
     time: 5999,
   },
-];
+] as (Omit<Mode, "gen" | "amount"> & { amount?: number; id: string })[];
 
 for (let [k, v] of Object.entries(gen)) if (!modesRaw.some((v) => v.id === k)) modesRaw.push({ name: k, id: k, time: 1000 });
 

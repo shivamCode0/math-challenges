@@ -43,11 +43,11 @@ function About() {
       <p>Contact: support@shivam.pro</p>
       <p>
         <Link href="/legal/terms">
-          <a>Terms of Service</a>
+          Terms of Service
         </Link>{" "}
         •{" "}
         <Link href="/legal/privacy">
-          <a>Privacy Policy</a>
+          Privacy Policy
         </Link>
       </p>
     </div>

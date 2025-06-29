@@ -15,13 +15,13 @@ function Nav({ searchQuery, setSearchQuery }) {
     <Navbar bg="primary" expand="lg" variant="dark">
       <div className="container-lg">
         <div>
-          <Link href="/">
-            <a style={{ textDecoration: "none" }}>
-              <img src={logo.src} alt="Logo" style={{ height: "2rem" }} className="me-2" width={32} height={32} />
-              <span className="navbar-brand me-0 me-sm-3" style={{ verticalAlign: "middle" }}>
-                Math Challenges
-              </span>
-            </a>
+          <Link href="/" style={{ textDecoration: "none" }}>
+
+            <img src={logo.src} alt="Logo" style={{ height: "2rem" }} className="me-2" width={32} height={32} />
+            <span className="navbar-brand me-0 me-sm-3" style={{ verticalAlign: "middle" }}>
+              Math Challenges
+            </span>
+
           </Link>
           {/* <a href="/">
             <img src={logo} alt="" style={{ height: "2rem" }} className="me-2" />
@@ -40,7 +40,7 @@ function Nav({ searchQuery, setSearchQuery }) {
               Levelmaker: "/levelmaker",
               // AMC: "https://mtrainer.ga",
             }).map(([k, v]) => (
-              <Link key={k} href={v} passHref>
+              <Link key={k} href={v} passHref legacyBehavior>
                 <NavbarNav.Link active={v == pathname} aria-current="page">
                   {k}
                 </NavbarNav.Link>

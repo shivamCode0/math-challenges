@@ -26,16 +26,16 @@ function Search({ search, setSearch }: { search: string; setSearch(arg0: any): a
       <ul>
         {results.map(([k, v]) => (
           <li key={k}>
-            <Link href={`/play/${k}`}>
-              <a
-                style={{
-                  textDecoration: "none",
-                  fontSize: "1.125em",
-                }}
-                className="text-indigo"
-                dangerouslySetInnerHTML={{ __html: highlightSearch(v.name) }}
-                onClick={() => setSearch("")}
-              />
+            <Link
+              href={`/play/${k}`}
+              style={{
+                textDecoration: "none",
+                fontSize: "1.125em",
+              }}
+              className="text-indigo"
+              dangerouslySetInnerHTML={{ __html: highlightSearch(v.name) }}
+              onClick={() => setSearch("")}>
+
             </Link>
           </li>
         ))}
