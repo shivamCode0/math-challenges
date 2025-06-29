@@ -17,7 +17,6 @@ import MetaLD from "components/MetaLD";
 // import { useLocalStorage } from "usehooks-ts";
 import PrintMode from "components/PrintMode";
 import Scoreboard from "components/Scoreboard";
-import { Problem } from "types";
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => ({
   paths: Object.keys((await import("util/modes")).default).map((m) => ({ params: { mode: m } })),
@@ -38,11 +37,11 @@ export const getStaticProps: GetStaticProps = async function (ctx) {
   }
 };
 
-function getCustomMode(customMode: string): typeof modes[string] {
+function getCustomMode(customMode: string): (typeof modes)[string] {
   try {
     let decodedData = JSON.parse(Base64.decode(customMode));
     // console.log(decodedData);
-    let newMode: typeof modes[string] & { gamemode: "countdown" | "timed" } = {
+    let newMode: (typeof modes)[string] & { gamemode: "countdown" | "timed" } = {
       name: decodedData.n,
       time: decodedData.ts,
       amount: decodedData.qc as any,
@@ -67,7 +66,7 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
   const [printAmountQuestions, setPrintAmountQuestions] = useState(10);
   const [gamemode, setGamemode] = useState<"countdown" | "timed">(null);
 
-  const game: typeof modes[string] & { gamemode?: "countdown" | "timed" } = customMode ? getCustomMode(mode) : modes[mode];
+  const game: (typeof modes)[string] & { gamemode?: "countdown" | "timed" } = customMode ? getCustomMode(mode) : modes[mode];
 
   const { printMode, setPrintMode } = usePrintMode();
   // const [dataLS, setDataLS] = useLocalStorage("mathchallenges_levels", {});
