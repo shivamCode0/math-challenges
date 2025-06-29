@@ -33,13 +33,14 @@ export const getStaticProps: GetStaticProps = async function (ctx) {
 function Play({ mode }: { mode: string }) {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(-1);
+  const [time, setTime] = useState(-1);
   const [problem, setProblem] = useState<Problem>(null);
   const [ansCorrectHistory, setAnsCorrectHistory] = useState<number[]>([]);
   const [showAns, setShowAns] = useState(false);
   const [ans, setAns] = useState("");
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [printAmountQuestions, setPrintAmountQuestions] = useState(10);
+  const [gamemode, setGamemode] = useState<"countdown" | "timed">("countdown");
 
   // let { mode }: { mode: string } = useParams();
   let game = modes[mode];
@@ -73,24 +74,42 @@ function Play({ mode }: { mode: string }) {
     else newProblem();
   }
 
-  function startGame() {
+  function startGame(gm: typeof gamemode) {
     setGameStarted(true);
     setGameEnded(false);
-    setTimeRemaining(game.time);
+    setGamemode(gm);
+
+    if (gm === "countdown") {
+      setTime(game.time);
+    } else if (gm === "timed") {
+      setTime(0);
+    }
+
     newProblem();
     setAnsCorrectHistory([]);
   }
 
   useEffect(() => {
     if (!game) return;
-    let timeoutID: NodeJS.Timeout;
-    if (gameStarted && timeRemaining > 0) timeoutID = setTimeout(() => setTimeRemaining((pv) => pv - 1), 1000);
-    if (timeRemaining === 0) {
-      setGameStarted(false);
-      setGameEnded(true);
+
+    if (gamemode === "countdown") {
+      let timeoutID: NodeJS.Timeout;
+      if (gameStarted && time > 0) timeoutID = setTimeout(() => setTime((pv) => pv - 1), 1000);
+      if (time === 0) {
+        setGameStarted(false);
+        setGameEnded(true);
+      }
+      return () => clearTimeout(timeoutID);
+    } else if (gamemode === "timed") {
+      let timeoutID: NodeJS.Timeout;
+      if (gameStarted) timeoutID = setTimeout(() => setTime((pv) => pv + 1), 1000);
+      if (ansCorrectHistory.length === game.amount) {
+        setGameStarted(false);
+        setGameEnded(true);
+      }
+      return () => clearTimeout(timeoutID);
     }
-    return () => clearTimeout(timeoutID);
-  }, [timeRemaining]);
+  }, [time, gamemode, ansCorrectHistory]);
   //
   function formatSeconds(totalSecs: number) {
     let m = Math.floor(totalSecs / 60);
@@ -173,20 +192,29 @@ function Play({ mode }: { mode: string }) {
           <div style={{ position: "relative" }}>
             <div>
               <div className="p-auto mx-auto border-primary" style={{ height: "4rem", width: "4rem", border: "4px solid", textAlign: "center", position: "relative", borderRadius: "50%" }}>
-                <p style={{ margin: 0, position: "absolute", top: "50%", transform: "translateY(-50%)", textAlign: "center", width: "100%", fontSize: "1.5rem" }}>{formatSeconds(timeRemaining)}</p>
+                <p style={{ margin: 0, position: "absolute", top: "50%", transform: "translateY(-50%)", textAlign: "center", width: "100%", fontSize: "1.5rem" }}>{formatSeconds(time)}</p>
               </div>
+              {gamemode === "timed" && (
+                <p className="text-center mt-2">
+                  {ansCorrectHistory.length + (showAns ? 0 : 1)} of {game.amount}
+                </p>
+              )}
             </div>
             {problem && <ProblemView {...{ problem, selectAns, showAns, newProblem, answerNumber, ans, setAns }} />}
           </div>
         ) : !gameStarted && !gameEnded ? (
           <div className="text-center">
-            <p>How to play: Answer as many questions as you can in under {game.time} seconds.</p>
-            <button type="button" className="btn btn-primary btn-lg" onClick={() => startGame()}>
-              Start
-            </button>
+            <p>Countdown: Answer as many questions as you can in under {game.time} seconds.</p>
+            <p>Timed: Answer {game.amount} questions correctly as fast as you can.</p>
+            <button type="button" className="btn btn-primary btn-lg" onClick={() => startGame("timed")}>
+              <span className="badge rounded-pill bg-info me-1">New</span>Play Timed
+            </button>{" "}
             <br />
+            <button type="button" className="btn btn-primary mt-3" onClick={() => startGame("countdown")}>
+              Play Countdown
+            </button>{" "}
             <button type="button" className="btn btn-primary btn mt-3" onClick={() => setShowPrintModal(true)}>
-              <span className="badge rounded-pill bg-info me-1">Beta</span>Make Worksheet
+              Make Worksheet
             </button>
           </div>
         ) : gameEnded ? (
@@ -199,32 +227,58 @@ function Play({ mode }: { mode: string }) {
                 let c = c_t[0];
                 let i = c_t[1] - c_t[0];
 
-                let score = 10 * c - 8 * i;
+                let score: number;
+                switch (gamemode) {
+                  case "countdown":
+                    score = 10 * c - 8 * i;
+                    break;
+                  case "timed":
+                    score = ((100 / (time / 20)) * (c - i / 2)) / (c + i);
+                    break;
+                }
+
+                let results: [string, string][];
+                switch (gamemode) {
+                  case "countdown":
+                    results = [
+                      ["Accuracy", `${Math.round(accuracy * 1e4) / 100}%`],
+                      ["Score", `${Math.round(score)}`],
+                      ["# of Problems", `${c + i}`],
+                    ];
+                    break;
+                  case "timed":
+                    results = [
+                      ["Accuracy", `${Math.round(accuracy * 1e4) / 100}%`],
+                      ["Score", `${Math.round(score)}`],
+                      ["Time", `${formatSeconds(time)}`],
+                    ];
+                    break;
+                }
 
                 return (
                   <div style={{ display: "flex", justifyContent: "center" }}>
                     <div className="mt-2 me-3">
                       <p className="text-center mb-0" style={{ fontSize: "2.5em", fontWeight: 700 }}>
-                        {`${Math.round(accuracy * 1e4) / 100}%`}
+                        {results[0][1]}
                       </p>
                       <p className="text-center" style={{ fontSize: "1em", fontWeight: 700 }}>
-                        Accuracy
+                        {results[0][0]}
                       </p>
                     </div>
                     <div className="mx-4 mx-md-5">
                       <p className="text-center mb-0" style={{ fontSize: "3.25em", fontWeight: 700, color: score <= 0 ? "red" : undefined }}>
-                        {`${score}`}
+                        {results[1][1]}
                       </p>
                       <p className="text-center" style={{ fontSize: "1.5em", fontWeight: 700 }}>
-                        Score
+                        {results[1][0]}
                       </p>
                     </div>
                     <div className="mt-2 ms-3">
                       <p className="text-center mb-0" style={{ fontSize: "2.5em", fontWeight: 700 }}>
-                        {`${c + i}`}
+                        {results[2][1]}
                       </p>
                       <p className="text-center" style={{ fontSize: "1em", fontWeight: 700 }}>
-                        # of Problems
+                        {results[2][0]}
                       </p>
                     </div>
                   </div>
@@ -241,7 +295,7 @@ function Play({ mode }: { mode: string }) {
                 onClick={() => {
                   setGameStarted(false);
                   setGameEnded(false);
-                  setTimeRemaining(-1);
+                  setTime(-1);
                   setAnsCorrectHistory([]);
                 }}
               >

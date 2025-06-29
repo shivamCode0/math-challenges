@@ -10,11 +10,11 @@
     {
       "src": "/android-chrome-512x512.png?v=PYAlRGqNaP",
       "sizes": "512x512",
-      "typez": "image/png"
+      "type": "image/png"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "#36aa56",
+  "background_color": "#264f79",
   "display": "standalone",
   "start_url": "/?source=pwa",
   "scope": "/"

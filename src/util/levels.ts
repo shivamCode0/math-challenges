@@ -90,19 +90,19 @@ const levels: { [k: string]: { name: string; modes: { name: string; mode: string
       name: "Fractions",
       modes: [
         [
-          { name: "📕 Level 1 - Add 2 fractions together", mode: "add_fraction1" },
-          { name: "📘 Level 2 - Add 2 fractions together", mode: "add_fraction2" },
-          { name: "📚 Level 3 - Add 3 fractions together", mode: "add_fraction3" },
+          { name: "📕 Level 1 - Add fractions", mode: "add_fraction1" },
+          { name: "📘 Level 2 - Add fractions", mode: "add_fraction2" },
+          { name: "📚 Level 3 - Add 3 fractions", mode: "add_fraction3" },
         ],
         [
-          { name: "⭐️ Level 1 - Subtract 2 fractions together", mode: "sub_fraction1" },
-          { name: "🎲 Level 2 - Subtract 2 fractions together", mode: "sub_fraction2" },
-          { name: "🎖 Level 3 - Subtract 3 fractions together", mode: "sub_fraction3" },
+          { name: "⭐️ Level 1 - Subtract fractions", mode: "sub_fraction1" },
+          { name: "🎲 Level 2 - Subtract fractions", mode: "sub_fraction2" },
+          { name: "🎖 Level 3 - Subtract 3 fractions", mode: "sub_fraction3" },
         ],
         [
-          { name: "📕 Level 1 - Multiply 2 fractions together", mode: "mult_fraction1" },
-          { name: "📘 Level 2 - Multiply 2 fractions together", mode: "mult_fraction2" },
-          { name: "📚 Level 3 - Multiply 3 fractions together", mode: "mult_fraction3" },
+          { name: "📕 Level 1 - Multiply 2 fractions", mode: "mult_fraction1" },
+          { name: "📘 Level 2 - Multiply 2 fractions", mode: "mult_fraction2" },
+          { name: "📚 Level 3 - Multiply 3 fractions", mode: "mult_fraction3" },
         ],
       ],
     },
@@ -112,9 +112,9 @@ const levels: { [k: string]: { name: string; modes: { name: string; mode: string
       name: "Linear Systems",
       modes: [
         [
-          { name: "📕 Lvl 1 - Solve an equation", mode: "lineq1" },
-          { name: "📘 Lvl 2 - Solve an equation", mode: "lineq2" },
-          { name: "📚 Lvl 3 - Solve an equation", mode: "lineq3" },
+          { name: "📕 Level 1 - Solve an equation", mode: "lineq1" },
+          { name: "📘 Level 2 - Solve an equation", mode: "lineq2" },
+          { name: "📚 Level 3 - Solve an equation", mode: "lineq3" },
         ],
         [
           { name: "🪛 Lvl 1 - Solve 2-variable systems", mode: "syslinear1" },
@@ -137,9 +137,9 @@ const levels: { [k: string]: { name: string; modes: { name: string; mode: string
           { name: "🎖 Lvl 3 - Find slope with 2 points", mode: "graphslope3" },
         ],
         [
-          { name: "📕 Lvl 1 -  Find y-intercept", mode: "graphyint1" },
-          { name: "📘 Lvl 2 - Find y-intercept", mode: "graphyint2" },
-          { name: "📚 Lvl 3 - Find y-intercept", mode: "graphyint3" },
+          { name: "📕 Level 1 -  Find y-intercept", mode: "graphyint1" },
+          { name: "📘 Level 2 - Find y-intercept", mode: "graphyint2" },
+          { name: "📚 Level 3 - Find y-intercept", mode: "graphyint3" },
         ],
       ],
     },
@@ -148,8 +148,8 @@ const levels: { [k: string]: { name: string; modes: { name: string; mode: string
       modes: [
         [
           { name: "📕 Level 1 - Solve x<sup>2</sup> + bx + c", mode: "solvequad1" },
-          { name: "📘 Level 2 - Solve ax<sup>2</sup> + bx + c", mode: "solvequad2" },
-          { name: "📚 Level 3 - Solve ax<sup>2</sup> + bx + c", mode: "solvequad3" },
+          { name: "📘 Lvl 2 - Solve Quadratic Equations", mode: "solvequad2" },
+          { name: "📚 Lvl 3 - Solve Quadratic Equations", mode: "solvequad3" },
         ],
         // [
         //   { name: "🪛 Lvl 1 - Factoring x<sup>2</sup> + bx + c", mode: "factorquad1" },
@@ -157,9 +157,9 @@ const levels: { [k: string]: { name: string; modes: { name: string; mode: string
         //   { name: "⚒ Lvl 3 - Factoring ax<sup>2</sup> + bx + c", mode: "factorquad3" },
         // ],
         [
-          { name: "✏ Level 1 - General Form to Vertex Form", mode: "vertex_form1" },
-          { name: "🖊 Level 2 - General Form to Vertex Form", mode: "vertex_form2" },
-          { name: "🖋 Level 3 - General Form to Vertex Form", mode: "vertex_form3" },
+          { name: "✏ Lvl 1 - General Form to Vertex Form", mode: "vertex_form1" },
+          { name: "🖊 Lvl 2 - General Form to Vertex Form", mode: "vertex_form2" },
+          { name: "🖋 Lvl 3 - General Form to Vertex Form", mode: "vertex_form3" },
         ],
       ],
     },
@@ -194,3 +194,9 @@ const levels: { [k: string]: { name: string; modes: { name: string; mode: string
 };
 
 export default levels;
+
+// Object.values(levels).forEach((c) =>
+//   c.forEach((l) => l.modes.forEach((m) => m.forEach((l2) => void (l2.name.length > 40 && console.warn(`'${l2.name}' is excessively long (${l2.name.length} chars)'`)))))
+// );
+
+for (const c of Object.values(levels)) for (const l of c) for (const m of l.modes) for (const l2 of m) if (l2.name.length > 40) console.warn(`'${l2.name}' is long (${l2.name.length} chars)'`);

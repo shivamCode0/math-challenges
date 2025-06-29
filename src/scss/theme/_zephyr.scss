@@ -30,7 +30,7 @@ $green: #18bc9c !default;
 $teal: #20c997 !default;
 $cyan: #3498db !default;
 
-$primary: #2c3e50 !default;
+$primary: #264f79 !default;
 $secondary: $gray-600 !default;
 $success: $green !default;
 $info: $cyan !default;
@@ -71,7 +71,7 @@ $dark: $gray-900 !default;
 // $light: $gray-100 !default;
 // $dark: $gray-900 !default;
 
-$min-contrast-ratio: 1.65 !default;
+$min-contrast-ratio: 2.5;
 
 $enable-shadows: true !default;
 
