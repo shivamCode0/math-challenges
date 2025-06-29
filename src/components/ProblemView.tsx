@@ -112,30 +112,6 @@ const ProblemView = ({
                         </div>
                       ))
                     )}
-                    {problem.type === ProblemType.Custom ? (
-                      problem.ansCustom(({ ans }) => (
-                        <span className="form-control" style={{ width: "max-content", display: "inline" }}>
-                          <img src={checkIcon.src} className="card-img-top w-auto m-0 me-2" alt="" style={{ height: "1.5rem" }}></img> {ans}
-                        </span>
-                      ))
-                    ) : problem.type === ProblemType.Text ? (
-                      <span className="form-control" style={{ width: "max-content", display: "inline" }}>
-                        <img src={checkIcon.src} className="card-img-top w-auto m-0 me-2" alt="" style={{ height: "1.5rem" }}></img> {problem.ans}
-                      </span>
-                    ) : (
-                      problem.opts.map((v) => (
-                        <div
-                          style={{ display: "inline-block", border: "1px solid gray", borderRadius: "0.25em", minWidth: "6em" }}
-                          className="my-2 mx-3 btn-lg py-2 px-3"
-                          key={typeof v.text === "object" ? JSON.stringify(v.text.props.tex || v.text.props) : v.text}
-                        >
-                          <img src={[xIcon, checkIcon][v.correct ? 1 : 0].src} className="card-img-top w-auto m-0 me-2" alt="" style={{ height: "2rem" }}></img>
-                          {/* <i className={`card-img-top fas ${["fa-xmark text-danger", "fa-check text-success"][v.correct ? 1 : 0]}`} style={{ fontSize: "1.5em" }} /> */}
-
-                          {v.text}
-                        </div>
-                      ))
-                    )}
                   </div>
                   <br />
                   <button type="button" className="btn btn-primary" onClick={() => newProblem()}>

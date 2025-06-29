@@ -2,7 +2,7 @@ import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import NavbarNav from "react-bootstrap/Nav";
 import logo from "./../img/math-app.png";
-import Link from "next/link";
+import Link from "components/NewNextLink";
 import { useRouter } from "next/router";
 import { useDarkMode } from "contexts/useDarkMode";
 
