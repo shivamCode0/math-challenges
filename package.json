@@ -13,7 +13,7 @@
     "duplicate-package-checker-webpack-plugin": "^3.0.0",
     "katex": "^0.13.18",
     "nanoid": "^3.1.30",
-    "next": "^12.0.1",
+    "next": "^11.1.2",
     "next-pwa": "^5.4.0",
     "nprogress": "^0.2.0",
     "postcss-flexbugs-fixes": "^5.0.2",
