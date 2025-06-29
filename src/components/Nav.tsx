@@ -1,18 +1,16 @@
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import NavbarNav from "react-bootstrap/Nav";
-import { Link, useLocation } from "react-router-dom";
 import logo from "./../img/math-app.png";
+import Link from "next/link";
 
 function Nav({ searchQuery, setSearchQuery }) {
-  let location = useLocation();
-
   return (
     <Navbar bg="primary" expand="lg" variant="dark">
       <div className="container-md">
         <div>
           <a href="/" style={{ textDecoration: "none" }}>
-            <img src={logo} alt="" style={{ height: "2rem" }} className="me-2" />
+            <img src={logo.src} alt="" style={{ height: "2rem" }} className="me-2" />
             <span className="navbar-brand me-0 me-sm-3" style={{ verticalAlign: "middle" }}>
               Math Challenges
             </span>
@@ -32,8 +30,8 @@ function Nav({ searchQuery, setSearchQuery }) {
               Home: "/",
               About: "/about",
             }).map(([k, v]) => (
-              <Link key="k" className={`nav-link${location.pathname === v ? " active" : ""}`} aria-current="page" to={v}>
-                {k}
+              <Link key={k} href={v}>
+                <NavbarNav.Link aria-current="page">{k}</NavbarNav.Link>
               </Link>
             ))}
           </NavbarNav>

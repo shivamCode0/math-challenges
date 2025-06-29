@@ -1,18 +1,35 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { Link, Redirect, useParams } from "react-router-dom";
-import { Problem, ProblemType } from "../util/gen";
-import checkIcon from "./../img/check.svg";
-import xIcon from "./../img/x.svg";
-import modes from "./../util/modes";
-import ProblemView from "./ProblemView";
-import { roundDec } from "../util/methods";
+import { Problem, ProblemType } from "../../util/gen";
+import checkIcon from "./../../img/check.svg";
+import xIcon from "./../../img/x.svg";
+import modes from "../../util/modes";
+import ProblemView from "../../components/ProblemView";
+import { roundDec } from "../../util/methods";
 import ReactDOM from "react-dom";
 import { nanoid } from "nanoid";
-import logo from "./../img/math-app.png";
+import logo from "./../../img/math-app.png";
 import Modal from "react-bootstrap/Modal";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { usePrintMode } from "../../contexts/PrintModeContext";
+import Link from "next/link";
+import Head from "next/head";
 
-function Play({ printMode, setPrintMode, setLoading }) {
+export const getStaticPaths: GetStaticPaths = async (ctx) => ({
+  paths: Object.keys(modes).map((m) => ({ params: { mode: m } })),
+  fallback: false,
+});
+
+export const getStaticProps: GetStaticProps = async function (ctx) {
+  const modeId: string = ctx.params?.mode as any;
+  if (!modeId) return { notFound: true };
+  const mode = modes[modeId];
+  if (!mode) return { notFound: true };
+
+  return { props: { mode: modeId } };
+};
+
+function Play({ mode }: { mode: string }) {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(-1);
@@ -23,9 +40,10 @@ function Play({ printMode, setPrintMode, setLoading }) {
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [printAmountQuestions, setPrintAmountQuestions] = useState(10);
 
-  let { mode }: { mode: string } = useParams();
-
+  // let { mode }: { mode: string } = useParams();
   let game = modes[mode];
+
+  const { printMode, setPrintMode } = usePrintMode();
 
   function newProblem() {
     setProblem(game.gen());
@@ -62,7 +80,6 @@ function Play({ printMode, setPrintMode, setLoading }) {
     setAnsCorrectHistory([]);
   }
 
-  document.title = `${game?.name.replaceAll(/<sup>(.*)<\/sup>/g, `^$1`)} | Math Challenges`;
   useEffect(() => {
     if (!game) return;
     let timeoutID: NodeJS.Timeout;
@@ -91,8 +108,9 @@ function Play({ printMode, setPrintMode, setLoading }) {
     }
   }, [printMode]);
 
-  return game ? (
+  return (
     <>
+      <Head>{`${game?.name.replaceAll(/<sup>(.*)<\/sup>/g, `^$1`)} | Math Challenges`}</Head>
       <div className="container">
         {(showPrintModal || printMode) &&
           ReactDOM.createPortal(
@@ -213,8 +231,8 @@ function Play({ printMode, setPrintMode, setLoading }) {
               })()}
             </div>
             <div className="text-center mt-4" style={{}}>
-              <Link to="/" className="btn btn-secondary m-2">
-                Go Back
+              <Link href="/">
+                <a className="btn btn-secondary m-2">Go Back</a>
               </Link>
               <button
                 type="button"
@@ -275,8 +293,6 @@ function Play({ printMode, setPrintMode, setLoading }) {
         </Modal.Footer>
       </Modal>
     </>
-  ) : (
-    <Redirect to="/" />
   );
 }
 

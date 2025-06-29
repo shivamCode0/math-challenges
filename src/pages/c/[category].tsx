@@ -1,13 +1,27 @@
-import { Link, useParams } from "react-router-dom";
 import twemoji from "twemoji";
-import cView from "../util/levels";
-import categories from "./../util/categories";
+import cView from "../../util/levels";
+import categories from "../../util/categories";
+import type { GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
+import Head from "next/head";
 
-function Home() {
-  let { category: cat }: { category: string } = useParams();
+export const getStaticPaths: GetStaticPaths = async (ctx) => ({
+  paths: categories.map((c) => ({ params: { category: c.id } })),
+  fallback: false,
+});
+
+export const getStaticProps: GetStaticProps = async function (ctx) {
+  const cat: string = ctx.params?.category as any;
+  if (!cat) {
+    console.log(1);
+    return { notFound: true };
+  }
   const category = categories.find((v) => v.id === cat);
-  document.title = `${category.title} | Math Challenges - Improve and Test Your Math Skills`;
 
+  return { props: { category } };
+};
+
+function Home({ category }) {
   let cViewGen = (
     data: {
       name: string;
@@ -26,12 +40,9 @@ function Home() {
               <ul key={i} style={{ lineHeight: 1.75 }} className="me-3">
                 {u.map((v1, i) => (
                   <li key={v1.mode}>
-                    <Link
-                      to={`/play/${v1.mode}`}
-                      style={{ textDecoration: "none" }}
-                      className="text-indigo"
-                      dangerouslySetInnerHTML={{ __html: twemoji.parse(v1.name, { folder: "svg", ext: ".svg" }) }}
-                    />
+                    <Link href={`/play/${v1.mode}`}>
+                      <a style={{ textDecoration: "none" }} className="text-indigo" dangerouslySetInnerHTML={{ __html: twemoji.parse(v1.name, { folder: "svg", ext: ".svg" }) }} />
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -44,13 +55,16 @@ function Home() {
 
   return (
     <div>
+      <Head>
+        <title key="title">{`${category.title} | Math Challenges - Improve and Test Your Math Skills`}</title>
+      </Head>
       {/* <h1 className="text-center my-3">{category.title}</h1>
       <hr /> */}
       <ul className="nav nav-tabs mb-3" style={{ justifyContent: "center" }}>
         {categories.map((v) => (
           <li className="nav-item" key={v.id}>
-            <Link className={`nav-link${cat === v.id ? " active" : ""}`} to={`/c/${v.id}`}>
-              {v.title}
+            <Link href={`/c/${v.id}`}>
+              <a className={`nav-link${category.id === v.id ? " active" : ""}`}>{v.title}</a>
             </Link>
           </li>
         ))}

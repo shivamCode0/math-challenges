@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import levels from "./../util/levels";
 import modes from "./../util/modes";
 
@@ -35,13 +35,9 @@ function Search({ search, setSearch }: { search: string; setSearch(arg0: any): a
       <ul>
         {results.map(([k, v]) => (
           <li key={k}>
-            <Link
-              to={`/play/${k}`}
-              style={{ textDecoration: "none", fontSize: "1.125em" }}
-              className="text-indigo"
-              dangerouslySetInnerHTML={{ __html: highlightSearch(v.name) }}
-              onClick={() => setSearch("")}
-            />
+            <Link href={`/play/${k}`}>
+              <a style={{ textDecoration: "none", fontSize: "1.125em" }} className="text-indigo" dangerouslySetInnerHTML={{ __html: highlightSearch(v.name) }} onClick={() => setSearch("")} />{" "}
+            </Link>
           </li>
         ))}
       </ul>
