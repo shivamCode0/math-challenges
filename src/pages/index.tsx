@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Head from "next/head";
 import categories from "../util/categories";
-import banner from "./../img/banner.png";
+import banner from "./../img/banner.jpg";
 
 function Home() {
   return (

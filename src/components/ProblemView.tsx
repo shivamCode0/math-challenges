@@ -16,11 +16,6 @@ const ProblemView = ({ problem, selectAns, showAns, newProblem, answerNumber }: 
     setAnsText("");
   }
 
-  function a<T>(v: T): T {
-    console.log(v);
-    return v;
-  }
-
   return useMemo(
     () => (
       <div>
@@ -34,7 +29,7 @@ const ProblemView = ({ problem, selectAns, showAns, newProblem, answerNumber }: 
                   <div
                     style={{ display: "inline-block", border: "1px solid gray", borderRadius: "0.25em", minWidth: "6em" }}
                     className="my-2 mx-3 btn-lg py-2 px-3"
-                    key={a(typeof v.text === "object" ? JSON.stringify(v.text.props.tex || v.text.props) : v.text)}
+                    key={typeof v.text === "object" ? JSON.stringify(v.text.props.tex || v.text.props) : v.text}
                   >
                     <img src={[xIcon, checkIcon][v.correct ? 1 : 0].src} className="card-img-top w-auto m-0 me-2" alt="" style={{ height: "2rem" }}></img>
                     {/* <i className={`card-img-top fas ${["fa-xmark text-danger", "fa-check text-success"][v.correct ? 1 : 0]}`} style={{ fontSize: "1.5em" }} /> */}

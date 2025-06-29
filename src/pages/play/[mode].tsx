@@ -207,12 +207,13 @@ function Play({ mode }: { mode: string }) {
             <p>Countdown: Answer as many questions as you can in under {game.time} seconds.</p>
             <p>Timed: Answer {game.amount} questions correctly as fast as you can.</p>
             <button type="button" className="btn btn-primary btn-lg" onClick={() => startGame("timed")}>
-              <span className="badge rounded-pill bg-info me-1">New</span>Play Timed
-            </button>{" "}
+              <span className="badge rounded-pill bg-info me-1">New</span>
+              Play Timed
+            </button>
             <br />
-            <button type="button" className="btn btn-primary mt-3" onClick={() => startGame("countdown")}>
+            <button type="button" className="btn btn-primary mt-3 me-2" onClick={() => startGame("countdown")}>
               Play Countdown
-            </button>{" "}
+            </button>
             <button type="button" className="btn btn-primary btn mt-3" onClick={() => setShowPrintModal(true)}>
               Make Worksheet
             </button>

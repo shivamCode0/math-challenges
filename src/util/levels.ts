@@ -199,4 +199,4 @@ export default levels;
 //   c.forEach((l) => l.modes.forEach((m) => m.forEach((l2) => void (l2.name.length > 40 && console.warn(`'${l2.name}' is excessively long (${l2.name.length} chars)'`)))))
 // );
 
-for (const c of Object.values(levels)) for (const l of c) for (const m of l.modes) for (const l2 of m) if (l2.name.length > 40) console.warn(`'${l2.name}' is long (${l2.name.length} chars)'`);
+for (const c of Object.values(levels)) for (const l of c) for (const m of l.modes) for (const l2 of m) if (l2.name.length > 40) console.warn(`'${l2.name}' is long (${l2.name.length} chars)`);

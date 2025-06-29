@@ -1,3 +1,4 @@
+import "preact/devtools";
 import React from "react";
 import "./../scss/main.scss";
 import { LoadingProvider } from "./../contexts/LoadingContext";
