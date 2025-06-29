@@ -15,6 +15,8 @@ import { usePrintMode } from "../../contexts/PrintModeContext";
 import Link from "next/link";
 import Head from "next/head";
 import "katex/dist/katex.min.css";
+import { Base64 } from "util/base64";
+import { shuffle } from "../../util/methods";
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => ({
   paths: Object.keys(modes).map((m) => ({ params: { mode: m } })),
@@ -23,14 +25,32 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => ({
 
 export const getStaticProps: GetStaticProps = async function (ctx) {
   const modeId: string = ctx.params?.mode as any;
-  if (!modeId) return { notFound: true };
-  const mode = modes[modeId];
-  if (!mode) return { notFound: true };
+  const customModeId: string = ctx.params?.custommode as any;
+  console.log({ customModeId });
 
-  return { props: { mode: modeId } };
+  if (customModeId) return { props: { mode: customModeId, customMode: true } };
+  else {
+    if (!modeId) return { notFound: true };
+    const mode = modes[modeId];
+    if (!mode) return { notFound: true };
+
+    return { props: { mode: modeId, customMode: false } };
+  }
 };
 
-function Play({ mode }: { mode: string }) {
+function getCustomMode(customMode: string): typeof modes[string] {
+  let decodedData = JSON.parse(Base64.decode(customMode));
+
+  let newMode: typeof modes[string] = {
+    name: "Custom Level",
+    time: decodedData.ts,
+    amount: decodedData.qc as any,
+    gen: shuffle(decodedData.l.map((v: string) => modes[v].gen) as (() => Problem)[])[0],
+  };
+  return newMode;
+}
+
+function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   const [time, setTime] = useState(-1);
@@ -43,7 +63,7 @@ function Play({ mode }: { mode: string }) {
   const [gamemode, setGamemode] = useState<"countdown" | "timed">("countdown");
 
   // let { mode }: { mode: string } = useParams();
-  let game = modes[mode];
+  let game = customMode ? getCustomMode(mode) : modes[mode];
 
   const { printMode, setPrintMode } = usePrintMode();
 
@@ -127,6 +147,10 @@ function Play({ mode }: { mode: string }) {
       }, 200);
     }
   }, [printMode]);
+
+  useEffect(() => {
+    window["Base64"] = Base64;
+  }, []);
 
   return (
     <>

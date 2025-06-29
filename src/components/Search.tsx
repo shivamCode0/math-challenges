@@ -1,27 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import levels from "./../util/levels";
-import modes from "./../util/modes";
+import { getQuery, searchModes } from "./../util/searchModes";
 
 function Search({ search, setSearch }: { search: string; setSearch(arg0: any): any }) {
-  let searchQ: string[] = [
-    ...new Set(
-      search
-        .trim()
-        .toLowerCase()
-        .split(/[\s,]+/gi)
-        .filter((v) => v.length > 0)
-    ),
-  ];
-  console.log(searchQ);
-
-  const results = Object.entries(modes).filter(([id, { name }]) =>
-    searchQ.every(
-      (v) =>
-        [id, name].map((v2) => v2.replace(/(<([^>]+)>)/gi, "").toLowerCase()).some((v3) => v3.includes(v) || v.includes(v3)) ||
-        Object.values(levels).some((v2) => v2.filter((v3) => v3.name.toLowerCase().includes(v)).some((v3) => v3.modes.some((v4) => v4.some((v5) => v5.mode === id))))
-    )
-  );
+  let searchQ = getQuery(search);
+  let results = searchModes(searchQ);
 
   const highlightSearch = (k: string): string => searchQ.reduce((ac, cv) => boldQuery(ac, cv), k);
 
@@ -31,8 +14,9 @@ function Search({ search, setSearch }: { search: string; setSearch(arg0: any): a
     const x = n.indexOf(q);
     if (!q || x === -1) return str;
     const l = q.length;
-    return str.substr(0, x) + "<b>" + str.substr(x, l) + "</b>" + str.substr(x + l);
+    return `${str.substr(0, x)}<b>${str.substr(x, l)}</b>${str.substr(x + l)}`;
   };
+
   return (
     <div className="container pt-4">
       <h1 className="text-center">Search Challenges</h1>
