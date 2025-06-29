@@ -10,12 +10,11 @@ export default class MyDocument extends Document {
           {/* <link rel="stylesheet" href="https://cdn.shivam.pro/app-libs/fontawesome-pro-6.0.0-alpha3-web/css/all.min.css" /> */}
 
           {/* Fonts */}
-          <link rel="preconnect" href="httaps://fonts.gstatic.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lato:wght@300;400;700&family=Open+Sans:wght@300;400;600&family=Roboto:wght@300;400;500;700&display=swap"
             rel="stylesheet"
           />
-          {/**/}
 
           {/* favicon package */}
           <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=PYAlRGqNaP" />
@@ -34,26 +33,14 @@ export default class MyDocument extends Document {
           <meta property="og:description" content="Improve and Test Your Math Skills" />
           <meta property="og:image" content="https://math.shivam.pro/imgcard.png" />
           <meta property="og:image:type" content="image/png" />
-          {/**/}
-
-          {/*
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    */}
-          {/*
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    */}
         </Head>
         <body>
           <Main />
           <div id="print-page-root"></div>
           <NextScript />
+          {/* Cloudflare Web Analytics */}
+          {process.env.NODE_ENV === "production" && <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "df90a14d01724e959f51616dcfd541f4"}'></script>}
+          {/* End Cloudflare Web Analytics */}
         </body>
       </Html>
     );

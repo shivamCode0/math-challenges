@@ -1,6 +1,5 @@
 import React from "react";
 import "./../scss/main.scss";
-import "katex/dist/katex.min.css";
 import { LoadingProvider } from "./../contexts/LoadingContext";
 import { PrintModeProvider } from "./../contexts/PrintModeContext";
 import { SearchQueryProvider } from "./../contexts/SearchQueryContext";

@@ -14,6 +14,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { usePrintMode } from "../../contexts/PrintModeContext";
 import Link from "next/link";
 import Head from "next/head";
+import "katex/dist/katex.min.css";
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => ({
   paths: Object.keys(modes).map((m) => ({ params: { mode: m } })),

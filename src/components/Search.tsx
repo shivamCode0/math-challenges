@@ -14,7 +14,14 @@ function Search({ search, setSearch }: { search: string; setSearch(arg0: any): a
     ),
   ];
   console.log(searchQ);
-  /* prettier-ignore */ const results = Object.entries(modes).filter(([id, { name }]) => searchQ.every((v) => [id, name].map((v2) => v2.replace(/(<([^>]+)>)/ig, "").toLowerCase()).some((v3) => v3.includes(v) || v.includes(v3)) || Object.values(levels).some((v2) => v2.filter((v3) => v3.name.toLowerCase().includes(v)).some((v3) => v3.modes.some((v4) => v4.some((v5) => v5.mode === id))))));
+
+  const results = Object.entries(modes).filter(([id, { name }]) =>
+    searchQ.every(
+      (v) =>
+        [id, name].map((v2) => v2.replace(/(<([^>]+)>)/gi, "").toLowerCase()).some((v3) => v3.includes(v) || v.includes(v3)) ||
+        Object.values(levels).some((v2) => v2.filter((v3) => v3.name.toLowerCase().includes(v)).some((v3) => v3.modes.some((v4) => v4.some((v5) => v5.mode === id))))
+    )
+  );
 
   const highlightSearch = (k: string): string => searchQ.reduce((ac, cv) => boldQuery(ac, cv), k);
 
@@ -36,7 +43,15 @@ function Search({ search, setSearch }: { search: string; setSearch(arg0: any): a
         {results.map(([k, v]) => (
           <li key={k}>
             <Link href={`/play/${k}`}>
-              <a style={{ textDecoration: "none", fontSize: "1.125em" }} className="text-indigo" dangerouslySetInnerHTML={{ __html: highlightSearch(v.name) }} onClick={() => setSearch("")} />{" "}
+              <a
+                style={{
+                  textDecoration: "none",
+                  fontSize: "1.125em",
+                }}
+                className="text-indigo"
+                dangerouslySetInnerHTML={{ __html: highlightSearch(v.name) }}
+                onClick={() => setSearch("")}
+              />
             </Link>
           </li>
         ))}

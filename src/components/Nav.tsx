@@ -9,7 +9,7 @@ function Nav({ searchQuery, setSearchQuery }) {
   const { pathname } = useRouter();
 
   return (
-    <Navbar bg="primary" expand="lg" variant="dark">
+    <Navbar bg="primary" expand="sm" variant="dark">
       <div className="container-md">
         <div>
           <Link href="/">
