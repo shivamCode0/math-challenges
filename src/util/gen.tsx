@@ -812,7 +812,7 @@ const matrixMultProblem = (max: number, minD = 2, maxD = minD): Problem => {
   };
 };
 
-const s = {
+const s: { [k: string]: () => Problem } = {
   add1: () => add(1, 9),
   add2: () => add(1, 100),
   add3: () => add(-10000, 10000),
@@ -906,6 +906,7 @@ const s = {
   matrix_mult3: () => matrixMultProblem(6, 4),
 
   test: () => matrixMultProblem(4, 2),
+  test2: () => matrixMultProblem(15, 23),
 };
 
 export default s;

@@ -1,5 +1,5 @@
-import levels from "./../util/levels";
-import modes from "./../util/modes";
+import levels from "util/levels";
+import modes from "util/modes";
 
 export function getQuery(search: string) {
   let searchQ: string[] = [
