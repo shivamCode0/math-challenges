@@ -3,6 +3,8 @@ import { rand, shuffle, rs, eqFix, isPrime, lcm, gcf, pyTriples30, pyQuadruples3
 import Tex from "../components/Tex";
 import right_triangle from "./../img/right-triangle.svg";
 import React from "react";
+import GetDesmos from "util/desmos";
+import { renderFunc } from "./renderFunc";
 
 export enum ProblemType {
   MC = "MultipleChoice",
@@ -818,6 +820,64 @@ const matrixMultProblem = (max: number, minD = 2, maxD = minD): Problem => {
   };
 };
 
+const testDesmos = async (): Promise<Problem> => {
+  let ans = "y = x^2";
+  let opts = ["y = x^2", "y = x", "x^2 + y^2 = 1", "y = e^x"];
+
+  return {
+    q: <>choose y = x^2</>,
+    ans,
+    opts: shuffle(
+      await Promise.all(
+        opts.map(async (v) => {
+          let svg = await renderFunc(v, true);
+          console.log(svg);
+          return {
+            text: <img style={{ height: "6rem" }} src={`data:image/svg+xml;charset=utf-8;base64,${btoa(svg)}`} alt="graph" />,
+            correct: v === ans,
+          };
+        })
+      )
+    ),
+  };
+};
+
+const identifyFunction = async (n: number): Promise<Problem> => {
+  let a: string[][] = [
+    ["y = x^2", "y = x", "x^2 + y^2 = 1", "y = e^x"],
+    ["y = \\sin(x)", "y = \\cos(x)", "x - \\frac{x^3}{3!} + \\frac{x^5}{5!} - \\frac{x^7}{7!}", "y = e^x"],
+    ["y = \\cos(x)", "y = \\sin(x)", "x - \\frac{x^3}{3!} + \\frac{x^5}{5!} - \\frac{x^7}{7!}", "y = e^x"],
+    ["y = \\tan(x)", "y = \\cot(x)", "-y = x - \\frac{x^3}{3!} + \\frac{x^5}{5!} - \\frac{x^7}{7!}", "y = \\sec(x)"],
+    ["y = \\sec(x)", "y = \\csc(x)", "\\left(-0.5\\left|x\\right|\\right)!", "y = \\cot(x)"],
+    ["y = \\csc(x)", "y = \\sec(x)", "\\left(-0.5\\left|x\\right|\\right)!", "y = \\cot(x)"],
+  ];
+  let opts = shuffle(a)[0];
+  let ans = opts[0];
+  // let ans = "y = x^2";
+  // let opts = ["y = x^2", "y = x", "x^2 + y^2 = 1", "y = e^x"];
+
+  return {
+    q: (
+      <>
+        Choose <Tex tex={ans} />
+      </>
+    ),
+    ans,
+    opts: shuffle(
+      await Promise.all(
+        opts.map(async (v) => {
+          let svg = await renderFunc(v, true);
+          console.log(svg);
+          return {
+            text: <img style={{ height: "6rem" }} src={`data:image/svg+xml;charset=utf-8;base64,${btoa(svg)}`} alt="graph" />,
+            correct: v === ans,
+          };
+        })
+      )
+    ),
+  };
+};
+
 /**
  * Algebraic Simplification
  */
@@ -892,7 +952,7 @@ const algSimp = (max: number, complexity = 2): Problem => {
   };
 };
 
-const s: { [k: string]: () => Problem } = {
+const s: { [k: string]: () => Problem | Promise<Problem> } = {
   add1: () => add(1, 9),
   add2: () => add(1, 100),
   add3: () => add(-10000, 10000),
@@ -985,7 +1045,11 @@ const s: { [k: string]: () => Problem } = {
   matrix_mult2: () => matrixMultProblem(5, 3),
   matrix_mult3: () => matrixMultProblem(6, 4),
 
-  test: () => algSimp(6, 2),
+  identify_function1: () => identifyFunction(1),
+  identify_function2: () => identifyFunction(2),
+  identify_function3: () => identifyFunction(3),
+
+  test: () => testDesmos(),
   test2: () => matrixMultProblem(15, 14),
 };
 

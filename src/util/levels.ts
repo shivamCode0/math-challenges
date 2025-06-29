@@ -128,7 +128,7 @@ const levels: { [k: string]: { name: string; modes: { name: string; mode: string
       ],
     },
     {
-      name: "Linear Graphs",
+      name: "Graphs",
       modes: [
         [
           { name: "⭐️ Lvl 1 -  Find slope with 2 points", mode: "graphslope1" },
@@ -139,6 +139,11 @@ const levels: { [k: string]: { name: string; modes: { name: string; mode: string
           { name: "📕 Level 1 -  Find y-intercept", mode: "graphyint1" },
           { name: "📘 Level 2 - Find y-intercept", mode: "graphyint2" },
           { name: "📚 Level 3 - Find y-intercept", mode: "graphyint3" },
+        ],
+        [
+          { name: "🪛 Level 1 - Identify Functions", mode: "identify_function1" },
+          { name: "🔧 Level 2 - Identify Functions", mode: "identify_function2" },
+          { name: "⚒ Level 3 - Identify Functions", mode: "identify_function3" },
         ],
       ],
     },

@@ -421,6 +421,22 @@ const modesRaw = <(Omit<Mode, "gen" | "amount"> & { amount?: number; id: string 
     id: "matrix_mult3",
     time: 360,
   },
+
+  {
+    name: "Level 1 - Identify Functions from Equations",
+    id: "identify_function1",
+    time: 120,
+  },
+  {
+    name: "Level 2 - Identify Functions from Equations",
+    id: "identify_function2",
+    time: 120,
+  },
+  {
+    name: "Level 3 - Identify Functions from Equations",
+    id: "identify_function3",
+    time: 120,
+  },
   {
     name: "Test",
     id: "test",
@@ -433,7 +449,7 @@ for (let [k, v] of Object.entries(gen)) if (!modesRaw.some((v) => v.id === k)) m
 const modes: {
   [k: string]: {
     name: string;
-    gen(): Problem;
+    gen(): Problem | Promise<Problem>;
     time: number;
     amount: number;
     meta?: {
