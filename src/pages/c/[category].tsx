@@ -4,6 +4,7 @@ import categories from "util/categories";
 import type { GetStaticPaths, GetStaticProps } from "next";
 import Link from "next/link";
 import Head from "next/head";
+import { useDarkMode } from "contexts/useDarkMode";
 
 export const getStaticPaths: GetStaticPaths = async (ctx) => ({
   paths: categories.map((c) => ({ params: { category: c.id } })),
@@ -21,7 +22,9 @@ export const getStaticProps: GetStaticProps = async function (ctx) {
   return { props: { category } };
 };
 
-function Home({ category }) {
+function Home({ category }: { category: typeof categories[0] }) {
+  const dm = useDarkMode();
+
   let cViewGen = (
     data: {
       name: string;
@@ -60,7 +63,7 @@ function Home({ category }) {
       </Head>
       {/* <h1 className="text-center my-3">{category.title}</h1>
       <hr /> */}
-      <ul className="nav nav-tabs mb-3" style={{ justifyContent: "center" }}>
+      <ul className="nav nav-tabs" style={{ justifyContent: "center" }}>
         {categories.map((v) => (
           <li className="nav-item" key={v.id}>
             <Link href={`/c/${v.id}`}>
@@ -69,6 +72,12 @@ function Home({ category }) {
           </li>
         ))}
       </ul>
+      <div className={`imgcolor-${category.img}`}>
+        <div
+          style={{ height: "4rem", background: `url("https://cdn.shivam.pro/app-static-data/images/cubes-thumbnail/cubes-blue-seamless.png")` }}
+          className={`mb-3 trans-filter${dm.darkModeEnabled ? " dark-image" : ""}`}
+        />
+      </div>
       <div className="container-fluid">
         <h1 className="text-center">{category.title}</h1>
         <p className="text-center">{category.desc}</p>

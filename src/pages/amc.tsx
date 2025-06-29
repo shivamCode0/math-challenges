@@ -17,30 +17,16 @@ import useFetch from "util/useFetch";
 
 function AMCTrainer() {
   // const { data: batch, error } = useFetch<AMCProblem[]>("/api/amcproblems?n=5");
-  const [isLoading, setIsLoading] = useState(true);
   const [batch, setBatch] = useState<AMCProblem[]>(null);
   // if (typeof window !== "undefined") console.log(batch);
 
   function fixHTML(html: string) {
     return html
       .split("$$")
-      .map((x, i) =>
-        i % 2 === 0
-          ? x
-          : katex.renderToString(x, {
-              throwOnError: false,
-            })
-      )
+      .map((x, i) => (i % 2 === 0 ? x : katex.renderToString(x, { throwOnError: false })))
       .join("")
       .split("$%$")
-      .map((x, i) =>
-        i % 2 === 0
-          ? x
-          : katex.renderToString(x, {
-              throwOnError: false,
-              displayMode: true,
-            })
-      )
+      .map((x, i) => (i % 2 === 0 ? x : katex.renderToString(x, { throwOnError: false, displayMode: true })))
       .join("");
   }
 
@@ -54,15 +40,14 @@ function AMCTrainer() {
       let a = localStorage.getItem("mathchallenges_amc_batch1");
       if (a) setBatch(JSON.parse(a));
       else {
-        fetch("/api/amcproblems?n=5")
+        fetch("/api/amcproblems?v=2021 AMC 10A Problems/Problem 23")
           .then((res) => res.json())
           .then((data) => {
             console.log(data);
             setBatch(data);
             localStorage.setItem("mathchallenges_amc_batch1", JSON.stringify(data));
           })
-          .catch((err) => alert(err))
-          .finally(() => setIsLoading(false));
+          .catch((err) => alert(err));
       }
     }
   }, [batch]);
@@ -87,7 +72,7 @@ function AMCTrainer() {
           <div key={v.title} className="card mb-3">
             <div className="card-header">{titleCleanup(v.title)}</div>
             <div className="card-body">
-              <p dangerouslySetInnerHTML={{ __html: fixHTML(v.problem) }} />
+              <p style={{ fontSize: "1em" }} dangerouslySetInnerHTML={{ __html: fixHTML(v.problem) }} />
               {/* <p>{v.solutions}</p> */}
             </div>
           </div>

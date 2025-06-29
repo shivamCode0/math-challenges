@@ -1,5 +1,5 @@
 import katex from "katex";
-// import * as cheerio from "cheerio";
+import * as cheerio from "cheerio";
 import problems from "./problems.json";
 import { JSDOM } from "jsdom";
 import jQuery from "jquery";
@@ -8,7 +8,7 @@ import path from "path";
 import fs from "fs/promises";
 
 // let document = ;;
-let $ = jQuery(new JSDOM("<html></html>", {}).window);
+let $: any = jQuery(new JSDOM("<html></html>", {}).window);
 
 // const $2 = cheerio.load("");
 
@@ -43,6 +43,7 @@ const randomProblems = (n: number) => {
 };
 
 async function makeBatch(pagenames: string[]): Promise<AMCProblem[]> {
+  console.log(pagenames);
   let problems = [];
   let problemTitles = pagenames.map((e) => e.replace(/_/g, " ").replace("#", "Problems/Problem "));
   let redirList = [];
@@ -53,35 +54,27 @@ async function makeBatch(pagenames: string[]): Promise<AMCProblem[]> {
   let apiEndpoint = "https://artofproblemsolving.com/wiki/api.php";
 
   let paramsList = problemTitles.map((currentProblem) => `action=parse&page=${currentProblem}&format=json`);
-  console.log(paramsList);
+  // console.log(paramsList);
   let responseList = await Promise.all(paramsList.map((params) => fetch(`${apiEndpoint}?${params}&origin=*`)));
-  console.log(responseList);
+  // console.log(responseList);
   let jsonList = await Promise.all(responseList.map((response) => response.json()));
-  console.log(jsonList);
+  // console.log(jsonList);
 
-  for (let [index, currentProblem] of problemTitles.entries()) {
-    let problemText = latexer(jsonList[index].parse.text["*"]);
-    let problemProblem = getProblem(problemText);
-    let problemSolutions = getSolutions(problemText);
+  function iter(index: number, currentProblem: string, isRedir: boolean) {
+    let problemText = jsonList[index].parse.text["*"];
+    let problemProblem1: string = latexer(getProblem(problemText));
+    let finalProblem = problemProblem1.replaceAll("KATEX_TMPTEST", () => "$$").replaceAll("KATEXD_TMPTEST", () => "$%$");
+    let problemSolutions1 = latexer(getSolutions(problemText));
+    let finalSolutions = problemSolutions1.replaceAll("KATEX_TMPTEST", () => "$$").replaceAll("KATEXD_TMPTEST", () => "$%$");
 
-    problemProblem = problemProblem
-      .split("KATEX_TMPTEST")
-      .map((v, i) => (i % 2 == 0 ? v : formatLatex(v)))
-      .join("$$");
-
-    problemProblem = problemProblem
-      .split("KATEXD_TMPTEST")
-      .map((v, i) => (i % 2 == 0 ? v : formatLatex(v)))
-      .join("$%$");
-
-    if (problemProblem && problemSolutions) {
+    if (redirIndex || (problemProblem1 && problemSolutions1)) {
       problems.push({
         title: currentProblem,
         difficulty: computeDifficulty(computeTest(currentProblem), computeNumber(currentProblem), computeYear(currentProblem)),
-        problem: problemProblem,
-        solutions: problemSolutions,
+        problem: finalProblem,
+        solutions: finalSolutions,
       });
-    } else if (problemText.includes("Redirect to:")) {
+    } else if (problemText.includes("Redirect to")) {
       console.log("Redirect problem, going there instead...");
 
       let redirHref = $($.parseHTML(problemText)).find(".redirectText a").attr("href");
@@ -95,61 +88,127 @@ async function makeBatch(pagenames: string[]): Promise<AMCProblem[]> {
     }
   }
 
+  for (let [index, currentProblem] of problemTitles.entries()) {
+    // let problemText = latexer(jsonList[index].parse.text["*"]);
+    // let problemProblem = getProblem(problemText);
+    // let problemSolutions = getSolutions(problemText);
+
+    // problemProblem = problemProblem
+    //   .split("KATEX_TMPTEST")
+    //   .map((v, i) => (i % 2 == 0 ? v : formatLatex(v)))
+    //   .join("$$");
+
+    // problemProblem = problemProblem
+    //   .split("KATEXD_TMPTEST")
+    //   .map((v, i) => (i % 2 == 0 ? v : formatLatex(v)))
+    //   .join("$%$");
+
+    // if (problemProblem && problemSolutions) {
+    //   problems.push({
+    //     title: currentProblem,
+    //     difficulty: computeDifficulty(computeTest(currentProblem), computeNumber(currentProblem), computeYear(currentProblem)),
+    //     problem: problemProblem,
+    //     solutions: problemSolutions,
+    //   });
+    // } else if (problemText.includes("Redirect to:")) {
+    //   console.log("Redirect problem, going there instead...");
+
+    //   let redirHref = $($.parseHTML(problemText)).find(".redirectText a").attr("href");
+    //   let redirPage = redirHref.replace("/wiki/index.php/", "").replace(/_/g, " ");
+    //   console.log(redirPage);
+    //   redirList.push(redirPage);
+    //   redirIndex.push(index);
+    // } else {
+    //   console.log("Invalid problem, skipping...");
+    //   invalidProblems++;
+    // }
+    iter(index, currentProblem, false);
+  }
+
   if (redirList[0]) {
+    console.log("REDIRLIST", redirList);
     paramsList = redirList.map((redirPage) => `action=parse&page=${redirPage}&format=json`);
     console.log(paramsList);
     responseList = await Promise.all(paramsList.map((params) => fetch(`${apiEndpoint}?${params}&origin=*`)));
     console.log(responseList);
     jsonList = await Promise.all(responseList.map((response) => response.json()));
     console.log(jsonList);
-
     for (let [index, currentProblem] of redirList.entries()) {
-      let problemText = latexer(jsonList[index].parse.text["*"]);
-      let problemProblem: string = getProblem(problemText);
-      problemProblem = problemProblem
-        .split("KATEX_TMPTEST")
-        .map((v, i) => (i % 2 == 0 ? v : formatLatex(v)))
-        .join("$$");
-
-      problemProblem = problemProblem
-        .split("KATEXD_TMPTEST")
-        .map((v, i) => (i % 2 == 0 ? v : formatLatex(v)))
-        .join("$%$");
-      let problemSolutions = getSolutions(problemText);
-
-      problems.splice(redirIndex[index], 0, {
-        title: currentProblem,
-        difficulty: computeDifficulty(computeTest(currentProblem), computeNumber(currentProblem), computeYear(currentProblem)),
-        problem: problemProblem,
-        solutions: problemSolutions,
-      });
+      // let problemText = jsonList[index].parse.text["*"];
+      // let problemProblem1: string = latexer(getProblem(problemText));
+      // let finalProblem = problemProblem1.replaceAll("KATEX_TMPTEST", () => "$$").replaceAll("KATEXD_TMPTEST", () => "$%$");
+      // let problemSolutions1 = getSolutions(problemText);
+      // let finalSolutions = problemSolutions1.replaceAll("KATEX_TMPTEST", () => "$$").replaceAll("KATEXD_TMPTEST", () => "$%$");
+      // // finalSolutions = "a";
+      // problems.splice(redirIndex[index], 0, {
+      //   title: currentProblem,
+      //   difficulty: computeDifficulty(computeTest(currentProblem), computeNumber(currentProblem), computeYear(currentProblem)),
+      //   problem: finalProblem,
+      //   solutions: finalSolutions,
+      // });
+      iter(index, currentProblem, true);
     }
   }
   return problems;
 }
 
 const latexer = (html: string) => {
-  html = html.replace(/<pre>\s+?(.*?)<\/pre>/gs, "<p style='white-space: pre-line;'>$1</p>");
+  let dom = new JSDOM(html);
+  let { document } = dom.window;
 
-  let images = html.match(/<img (?:.*?) class="latex\w*?" (?:.*?)>/g);
-  images = [...new Set(images)];
+  document.querySelectorAll("pre").forEach((v) => {
+    v.outerHTML = `<p style='white-space: pre-line;'>${v.innerHTML.trim()}</p>`;
+  });
+  document.querySelectorAll("a").forEach((v) => {
+    let e = document.createElement("a");
+    let url = new URL(v.href, "https://artofproblemsolving.com");
+    e.href = url.toString();
+    e.innerHTML = v.innerHTML;
+    v.replaceWith(e);
+  });
+
+  // html = html.replace(/<pre>\s+?(.*?)<\/pre>/gs, "<p style='white-space: pre-line;'>$1</p>");
+
+  // let images = html.match(/<img (?:.*?) class="latex\w*?" (?:.*?)>/g);
+  // images = [...new Set(images)];
+  let images = [...document.querySelectorAll("img")].filter((v) => v.className.includes("latex"));
 
   if (images) {
     for (let image of images) {
-      if (!image.includes("[asy]")) {
-        let isDisplay = /alt="\\\[|\\begin/.test(image);
-        let imageLatex = image.match(/alt="(.*?)"/)[1];
+      if (image.alt.includes("[asy]")) {
+        let newImg = document.createElement("img");
+        newImg.src = image.src;
+        newImg.className = image.className;
+        image.replaceWith(newImg);
+        // image.outerHTML = "a";
+        // console.log(image.outerHTML);
+      } else {
+        // console.log(image);
+        // let a = new JSDOM(image);
+        // let imgElem = a.window.document.querySelector("img");
+        // if (!imgElem) {
+        //   console.log("imgElem is null");
+        //   console.log(image);
+        // }
+        let imageLatex = image.alt;
+        let isDisplay = image.classList.contains("latexdisplay") || image.classList.contains("latexcenter");
+        if (isDisplay) console.log("display", imageLatex);
+        // let isDisplay = /alt="\\\[|\\begin/.test(image);
+        // let imageLatex = image.match(/alt="(.*?)"/)[1];
         // let renderedLatex = katex.renderToString(imageLatex, {
         //   throwOnError: false,
         //   displayMode: isDisplay,
         // });
         // html = html.replaceAll(image, `<span class="fallback-container">$&</span>` + `<katex class="katex-container">${renderedLatex}</katex>`);
-        html = html.replaceAll(image, (v) => (isDisplay ? `KATEXD_TMPTEST${imageLatex}KATEXD_TMPTEST` : `KATEX_TMPTEST${imageLatex}KATEX_TMPTEST`));
+        let vstr = isDisplay ? "KATEXD_TMPTEST" : "KATEX_TMPTEST";
+        // console.log(imageLatex, formatLatex(imageLatex));
+        image.outerHTML = `${vstr}${formatLatex(imageLatex)}${vstr}`;
+        // html = html.replaceAll(image, (v) => `${vstr}${formatLatex(imageLatex)}${vstr}`);
         // html = html.replaceAll(image, `<span class="fallback-container">$&</span>` + `<katex class="katex-container">${renderedLatex}</katex>`);
       }
     }
   }
-  return html;
+  return document.body.innerHTML;
 };
 
 // Splits and adds problem parts
@@ -165,7 +224,6 @@ function getProblem(htmlString) {
     .not(".toc")
     .not("p:last-child > br:first-child")
     .not(":header");
-
   let afterHTML = $(after)
     .map(function () {
       // @ts-ignore
