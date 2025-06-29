@@ -14,3 +14,10 @@ export type Problem = {
   type?: ProblemType;
   ansCustom?: (Input: ({ isCorrect, ans }: { isCorrect?: (v: number) => boolean; ans: number | string }) => JSX.Element) => React.ReactNode;
 };
+
+export type AMCProblem = {
+  title: string;
+  difficulty: number;
+  problem: string;
+  solutions: string;
+};

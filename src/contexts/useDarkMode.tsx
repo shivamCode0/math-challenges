@@ -63,6 +63,15 @@ function useProvideDarkMode(): { d: DarkModeContextType; s: any } {
             {DR}
           </style>
         )}
+        {dm && !DR && (
+          <style jsx global>
+            {`
+              * {
+                background-color: #181a1b !important;
+              }
+            `}
+          </style>
+        )}
       </>
     ),
   };

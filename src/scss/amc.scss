@@ -1,0 +1,22 @@
+.amc-root {
+  .fallback-container:not(.fallback-live),
+  .katex-broken {
+    display: none;
+  }
+
+  img.latex,
+  img.latexcenter,
+  #difficulty-chart {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  #difficulty-chart .mark-rect,
+  #difficulty-chart .mark-symbol {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
+  #difficulty-chart .role-frame > g > path.background,
+  #difficulty-chart .role-axis-grid > line {
+    stroke: hsl(0 0% 75%) !important;
+  }
+}

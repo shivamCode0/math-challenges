@@ -38,6 +38,7 @@ function Nav({ searchQuery, setSearchQuery }) {
               Home: "/",
               About: "/about",
               Levelmaker: "/levelmaker",
+              AMC: "/amc",
             }).map(([k, v]) => (
               <Link key={k} href={v} passHref>
                 <NavbarNav.Link active={v == pathname} aria-current="page">
