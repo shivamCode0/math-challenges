@@ -47,9 +47,8 @@ function Home({ category }: { category: typeof categories[0] }) {
                       href={`/play/${v1.mode}`}
                       style={{ textDecoration: "none" }}
                       className="text-indigo"
-                      dangerouslySetInnerHTML={{ __html: twemoji.parse(v1.name, { folder: "svg", ext: ".svg" }) }}>
-
-                    </Link>
+                      dangerouslySetInnerHTML={{ __html: twemoji.parse(v1.name, { folder: "svg", ext: ".svg" }) }}
+                    ></Link>
                   </li>
                 ))}
               </ul>
@@ -70,9 +69,7 @@ function Home({ category }: { category: typeof categories[0] }) {
       <ul className="nav nav-tabs" style={{ justifyContent: "center" }}>
         {categories.map((v) => (
           <li className="nav-item" key={v.id}>
-            <Link
-              href={`/c/${v.id}`}
-              className={`nav-link${category.id === v.id ? " active" : ""}`}>
+            <Link href={`/c/${v.id}`} className={`nav-link${category.id === v.id ? " active" : ""}`}>
               {v.title}
             </Link>
           </li>

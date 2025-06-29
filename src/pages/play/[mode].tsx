@@ -41,12 +41,12 @@ export const getStaticProps: GetStaticProps = async function (ctx) {
 function getCustomMode(customMode: string): typeof modes[string] {
   try {
     let decodedData = JSON.parse(Base64.decode(customMode));
-    console.log(decodedData);
+    // console.log(decodedData);
     let newMode: typeof modes[string] & { gamemode: "countdown" | "timed" } = {
       name: decodedData.n,
       time: decodedData.ts,
       amount: decodedData.qc as any,
-      gen: shuffle(decodedData.l.map((v: string) => modes[v].gen) as (() => Problem)[])[0],
+      gen: shuffle(decodedData.l.map((v: string) => modes[v].gen) as (() => Promise<Problem>)[])[0],
       gamemode: decodedData.gm,
     };
     return newMode;
@@ -73,8 +73,11 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
   // const [dataLS, setDataLS] = useLocalStorage("mathchallenges_levels", {});
 
   function newProblem() {
-    (async () => game.gen())().then((p) => setProblem(p));
+    console.log(1);
+    game.gen().then((p) => setProblem(p));
+    console.log(2);
     setShowAns(false);
+    console.log(3);
   }
 
   function printWS() {

@@ -465,7 +465,7 @@ for (let [k, v] of Object.entries(gen)) if (!modesRaw.some((v) => v.id === k)) m
 const modes: {
   [k: string]: {
     name: string;
-    gen(): Problem | Promise<Problem>;
+    gen(): Promise<Problem>;
     time: number;
     amount: number;
     meta?: {
@@ -479,7 +479,7 @@ const modes: {
       }[];
     };
   };
-} = Object.fromEntries(modesRaw.map((v, i) => [v.id, { name: v.name, gen: gen[v.id], time: v.time, amount: v.amount || 10, ...(!!v.meta && { meta: v.meta }) }]));
+} = Object.fromEntries(modesRaw.map((v, i) => [v.id, { name: v.name, gen: async () => await gen[v.id](), time: v.time, amount: v.amount || 10, ...(!!v.meta && { meta: v.meta }) }]));
 
 export default modes;
 

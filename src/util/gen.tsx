@@ -13,17 +13,22 @@ export enum ProblemType {
 }
 
 const add = (min: number, max: number): Problem => {
+  console.log(1, "a");
   let a = rand(min, max);
   let b = rand(min, max);
 
-  let e = max - min;
-  e = e / (e < 4 ? 1 : 15);
-  e = Math.round(e);
-  if (e === 0) e = 1;
-  let c = rand(-e, e, { no0: true });
-  let d = c;
-  while (d === c) d = rand(-e, e, { no0: true });
+  // let e = max - min;
+  // e = e / (e < 4 ? 1 : 15);
+  // e = Math.round(e);
+  // if (e === 0) e = 1;
+  // let c = rand(-e, e, { no0: true });
+  // let d = c;
+  // while (d === c) {
+  //   console.log("while");
+  //   d = rand(-e, e, { no0: true });
+  // }
 
+  console.log(2, "f");
   return {
     q: (
       <>
@@ -39,12 +44,13 @@ const add = (min: number, max: number): Problem => {
       </>
     ),
     ans: a + b,
-    opts: shuffle([
-      { text: `${a + b}`, correct: true },
-      { text: `${a - b}`, correct: false },
-      { text: `${a + b + c}`, correct: false },
-      { text: `${a + b + d}`, correct: false },
-    ]),
+    opts: [],
+    // opts: shuffle([
+    //   { text: `${a + b}`, correct: true },
+    //   { text: `${a - b}`, correct: false },
+    //   { text: `${a + b + c}`, correct: false },
+    //   { text: `${a + b + d}`, correct: false },
+    // ]),
     type: ProblemType.Text,
   };
 };
@@ -53,13 +59,13 @@ const sub = (min: number, max: number): Problem => {
   let a = rand(min, max);
   let b = rand(min, max);
 
-  let e = max - min;
-  e = e / (e < 4 ? 1 : 15);
-  e = Math.round(e);
-  if (e === 0) e = 1;
-  let c = rand(-e, e, { no0: true });
-  let d = c;
-  while (d === c) d = rand(-e, e, { no0: true });
+  // let e = max - min;
+  // e = e / (e < 4 ? 1 : 15);
+  // e = Math.round(e);
+  // if (e === 0) e = 1;
+  // let c = rand(-e, e, { no0: true });
+  // let d = c;
+  // while (d === c) d = rand(-e, e, { no0: true });
 
   return {
     q: (
@@ -76,12 +82,13 @@ const sub = (min: number, max: number): Problem => {
       </>
     ),
     ans: a - b,
-    opts: shuffle([
-      { text: `${a - b}`, correct: true },
-      { text: `${a + b}`, correct: false },
-      { text: `${a - b + c}`, correct: false },
-      { text: `${a - b + d}`, correct: false },
-    ]),
+    opts: [],
+    // opts: shuffle([
+    //   { text: `${a - b}`, correct: true },
+    //   { text: `${a + b}`, correct: false },
+    //   { text: `${a - b + c}`, correct: false },
+    //   { text: `${a - b + d}`, correct: false },
+    // ]),
     type: ProblemType.Text,
   };
 };
