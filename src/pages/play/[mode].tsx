@@ -171,7 +171,9 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
     </div>
   ) : (
     <>
-      <Head>{`${game?.name.replace(/<sup>(.*)<\/sup>/g, `^$1`)} | Math Challenges`}</Head>
+      <Head>
+        <title>{`${game?.name.replace(/<sup>(.*)<\/sup>/g, `^$1`)} | Math Challenges`}</title>
+      </Head>
       <div className="container">
         {(showPrintModal || printMode) &&
           ReactDOM.createPortal(
@@ -192,7 +194,7 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
                         </div>
                       </div>
                     </nav>
-                    <hr />
+                    <hr style={{ borderTop: "1px solid var(--bs-gray-800)" }} />
                     <div style={{ columnGap: "2rem", columnCount: 2, columnRule: "1px solid rgb(220, 220, 220)" }}>
                       {questions.map((v, i) => (
                         <div key={nanoid(6)} style={{ breakInside: "avoid" }}>
@@ -213,7 +215,7 @@ function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
                               </p>
                             )}
                           </div>
-                          <hr />
+                          <hr style={{ borderTop: "1px solid var(--bs-gray-800)" }} />
                         </div>
                       ))}
                     </div>

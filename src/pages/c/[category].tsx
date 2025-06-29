@@ -56,7 +56,7 @@ function Home({ category }) {
   return (
     <div>
       <Head>
-        <title key="title">{`${category.title} | Math Challenges - Improve and Test Your Math Skills`}</title>
+        <title>{`${category.title} | Math Challenges - Improve and Test Your Math Skills`}</title>
       </Head>
       {/* <h1 className="text-center my-3">{category.title}</h1>
       <hr /> */}

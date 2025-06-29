@@ -11,7 +11,7 @@ function App({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Math Challenges - Improve and Test Your Math Skills</title>
+        <title>Undefined Title | Math Challenges</title>
       </Head>
       <LoadingProvider>
         <PrintModeProvider>

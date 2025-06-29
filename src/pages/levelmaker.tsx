@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { searchModes, getQuery } from "util/searchModes";
 import { Base64 } from "util/base64";
+import Head from "next/head";
 
 function LevelMaker() {
   const [gamemode, setGamemode] = useState<"countdown" | "timed">("countdown");
@@ -33,6 +34,10 @@ function LevelMaker() {
 
   return (
     <div className="container mt-3">
+      <Head>
+        <title>Level Maker</title>
+      </Head>
+
       <h1 className="text-center">Level Maker</h1>
       <hr />
       <p>Make your own compound level that has questions from existing levels. Pick and choose the settings you want, and send your custom level to anyone.</p>

@@ -24,17 +24,19 @@ module.exports = {
     }
 
     if (process.env.ANALYZE) {
-      const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
       const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
+      const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+      config.plugins.push(new DuplicatePackageCheckerPlugin());
       config.plugins.push(
         new BundleAnalyzerPlugin({
           analyzerMode: "static",
           reportTitle: `${isServer ? "Server" : "Client"} Bundle Size - Math Challenges`,
           openAnalyzer: true,
+          reportFilename: `./static/bundlereport/${isServer ? "server" : "client"}.html`,
         })
       );
-      config.plugins.push(new DuplicatePackageCheckerPlugin());
     }
+
     return config;
   },
 };
