@@ -57,8 +57,6 @@ function getCustomMode(customMode: string): typeof modes[string] {
 }
 
 function Play({ mode, customMode }: { mode: string; customMode: boolean }) {
-  // const [modes, setModes] = useState(null);
-
   const [gameStarted, setGameStarted] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
   const [time, setTime] = useState(-1);

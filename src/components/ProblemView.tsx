@@ -53,10 +53,7 @@ const ProblemView = ({
   }
 
   function customAnswer() {
-    // let vs = verifiers.current;
-    // console.log(verifiers.current);
     let correct = verifiers.current.map((v) => v[1]()).every((v) => v);
-    // console.log({ correct });
     setVerifiers([]);
     setAnsCorrectHistory((pv) => [...pv, correct ? 1 : 0]);
     if (!correct) setShowAns(true);
@@ -69,13 +66,9 @@ const ProblemView = ({
       const [input, setInput] = useState("");
       const [id, setId] = useState("");
       let f = f1 || (() => ans == Number.parseFloat(input));
-      // console.log(f);
-      // console.log(ans, input);
       useEffect(() => setId(nanoid(12)), []);
       useEffect(() => {
-        // console.log("fedfds", id);
         if (id) setVerifiers((pv) => [...pv.filter(([i]) => i !== id), [id, () => f(Number.parseFloat(input))]]);
-        // console.log(verifiers);
         return () => {
           if (id) setVerifiers((pv) => pv.filter(([i]) => i !== id));
         };
@@ -83,10 +76,6 @@ const ProblemView = ({
 
       return <input className="form-control" style={{ width: "max-content", maxWidth: "6rem", display: "inline" }} type="text" value={input} onChange={(e) => setInput(e.target.value)} />;
     };
-
-  // useEffect(() => {
-  //   // console.log("V", verifiers);
-  // }, [verifiers]);
 
   return useMemo(
     () => (

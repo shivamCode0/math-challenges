@@ -464,16 +464,7 @@ const modes: {
       }[];
     };
   };
-} = Object.fromEntries(
-  modesRaw
-    // [
-    //   ...modesRaw,
-    //   Object.entries(gen)
-    //     .filter(([k]) => !modesRaw.some((v) => v.id === k))
-    //     .map(([k]) => ({ name: k, id: k, time: 1000 })),
-    // ] as typeof modesRaw
-    .map((v, i) => [v.id, { name: v.name, gen: gen[v.id], time: v.time, amount: v.amount || 10, ...(!!v.meta && { meta: v.meta }) }])
-);
+} = Object.fromEntries(modesRaw.map((v, i) => [v.id, { name: v.name, gen: gen[v.id], time: v.time, amount: v.amount || 10, ...(!!v.meta && { meta: v.meta }) }]));
 
 export default modes;
 
